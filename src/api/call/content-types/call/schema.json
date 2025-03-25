@@ -1,0 +1,68 @@
+{
+  "kind": "collectionType",
+  "collectionName": "calls",
+  "info": {
+    "singularName": "call",
+    "pluralName": "calls",
+    "displayName": "Call",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "channelName": {
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "voice",
+        "video"
+      ],
+      "required": true
+    },
+    "startTime": {
+      "type": "datetime",
+      "required": true
+    },
+    "endTime": {
+      "type": "datetime",
+      "required": true
+    },
+    "duration": {
+      "type": "decimal",
+      "required": true
+    },
+    "totalCost": {
+      "type": "decimal",
+      "required": true
+    },
+    "call_status": {
+      "type": "enumeration",
+      "enum": [
+        "ongoing",
+        "completed",
+        "cancelled"
+      ],
+      "default": "ongoing",
+      "required": true
+    },
+    "uid": {
+      "type": "integer"
+    },
+    "caller": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::public-user.public-user",
+      "inversedBy": "caller_calls"
+    },
+    "receiver": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::public-user.public-user",
+      "inversedBy": "receiver_calls"
+    }
+  }
+}

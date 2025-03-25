@@ -1,0 +1,86 @@
+{
+  "kind": "collectionType",
+  "collectionName": "public_users",
+  "info": {
+    "singularName": "public-user",
+    "pluralName": "public-users",
+    "displayName": "Public_Profile",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "username": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "password": {
+      "type": "password",
+      "required": true
+    },
+    "role": {
+      "type": "enumeration",
+      "enum": [
+        "General",
+        "Expert"
+      ],
+      "default": "General",
+      "required": true
+    },
+    "walletBalance": {
+      "type": "decimal"
+    },
+    "bio": {
+      "type": "text",
+      "maxLength": 50
+    },
+    "profilePic": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "caller_calls": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::call.call",
+      "mappedBy": "caller"
+    },
+    "receiver_calls": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::call.call",
+      "mappedBy": "receiver"
+    },
+    "posts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::post.post",
+      "mappedBy": "author"
+    },
+    "review": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::review.review",
+      "mappedBy": "experts"
+    },
+    "experts": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::expert-profile.expert-profile",
+       "mappedBy": "user"
+    }
+  }
+}

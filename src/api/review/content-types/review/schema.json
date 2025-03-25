@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "reviews",
+  "info": {
+    "singularName": "review",
+    "pluralName": "reviews",
+    "displayName": "Review",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "rating": {
+      "type": "decimal",
+      "required": true
+    },
+    "comments": {
+      "type": "text",
+      "maxLength": 100
+    },
+    "reviewer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::public-user.public-user",
+      "inversedBy": "review"
+    },
+    "experts": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::public-user.public-user",
+      "inversedBy": "review"
+    }
+  }
+}

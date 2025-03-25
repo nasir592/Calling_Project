@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "expert_profiles",
+  "info": {
+    "singularName": "expert-profile",
+    "pluralName": "expert-profiles",
+    "displayName": "Expert_Profile",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "specialization": {
+      "type": "string",
+      "required": true
+    },
+    "experience": {
+      "type": "integer"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::public-user.public-user",
+      "inversedBy": "experts"
+    }
+  }
+}
