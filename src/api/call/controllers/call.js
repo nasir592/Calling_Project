@@ -29,7 +29,7 @@ module.exports = {
           return ctx.notFound("Caller or Receiver not found.");
         }
     
-        // ✅ Generate Agora token good
+        // ✅ Generate Agora token good ff
         const token = Agora.RtcTokenBuilder.buildTokenWithUid(
           appId,
           appCertificate,
