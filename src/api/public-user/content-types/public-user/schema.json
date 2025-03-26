@@ -21,7 +21,8 @@
     },
     "email": {
       "type": "email",
-      "required": true
+      "required": true,
+      "unique": true
     },
     "password": {
       "type": "password",
@@ -29,10 +30,7 @@
     },
     "role": {
       "type": "enumeration",
-      "enum": [
-        "General",
-        "Expert"
-      ],
+      "enum": ["General", "Expert"],
       "default": "General",
       "required": true
     },
@@ -47,22 +45,7 @@
       "type": "media",
       "multiple": true,
       "required": false,
-      "allowedTypes": [
-        "images",
-        "files"
-      ]
-    },
-    "caller_calls": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::call.call",
-      "mappedBy": "caller"
-    },
-    "receiver_calls": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::call.call",
-      "mappedBy": "receiver"
+      "allowedTypes": ["images", "files"]
     },
     "posts": {
       "type": "relation",
@@ -80,7 +63,19 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::expert-profile.expert-profile",
-       "mappedBy": "user"
+      "mappedBy": "user"
+    },
+    "caller_calls": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::call.call",
+      "mappedBy": "caller"
+    },
+    "receiver_calls": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::call.call",
+      "mappedBy": "receiver"
     }
   }
 }

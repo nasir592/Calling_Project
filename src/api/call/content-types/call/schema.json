@@ -17,37 +17,25 @@
     },
     "type": {
       "type": "enumeration",
-      "enum": [
-        "voice",
-        "video"
-      ],
+      "enum": ["voice", "video"],
       "required": true
     },
     "startTime": {
-      "type": "datetime",
-      "required": true
+      "type": "datetime"
     },
     "endTime": {
-      "type": "datetime",
-      "required": true
+      "type": "datetime"
     },
     "duration": {
-      "type": "decimal",
-      "required": true
+      "type": "decimal"
     },
     "totalCost": {
-      "type": "decimal",
-      "required": true
+      "type": "decimal"
     },
     "call_status": {
       "type": "enumeration",
-      "enum": [
-        "ongoing",
-        "completed",
-        "cancelled"
-      ],
-      "default": "ongoing",
-      "required": true
+      "enum": ["ongoing", "completed", "cancelled"],
+      "default": "ongoing"
     },
     "uid": {
       "type": "integer"

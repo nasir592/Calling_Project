@@ -384,7 +384,6 @@ export interface ApiCallCall extends Struct.CollectionTypeSchema {
     call_status: Schema.Attribute.Enumeration<
       ['ongoing', 'completed', 'cancelled']
     > &
-      Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'ongoing'>;
     caller: Schema.Attribute.Relation<
       'manyToOne',
@@ -394,8 +393,8 @@ export interface ApiCallCall extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    duration: Schema.Attribute.Decimal & Schema.Attribute.Required;
-    endTime: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    duration: Schema.Attribute.Decimal;
+    endTime: Schema.Attribute.DateTime;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::call.call'> &
       Schema.Attribute.Private;
@@ -404,8 +403,8 @@ export interface ApiCallCall extends Struct.CollectionTypeSchema {
       'manyToOne',
       'api::public-user.public-user'
     >;
-    startTime: Schema.Attribute.DateTime & Schema.Attribute.Required;
-    totalCost: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    startTime: Schema.Attribute.DateTime;
+    totalCost: Schema.Attribute.Decimal;
     type: Schema.Attribute.Enumeration<['voice', 'video']> &
       Schema.Attribute.Required;
     uid: Schema.Attribute.Integer;
@@ -500,7 +499,9 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     experts: Schema.Attribute.Relation<
       'oneToOne',
       'api::expert-profile.expert-profile'
