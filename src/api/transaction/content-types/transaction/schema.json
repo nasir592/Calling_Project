@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "transactions",
+  "info": {
+    "singularName": "transaction",
+    "pluralName": "transactions",
+    "displayName": "Transaction"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "wallet": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::wallet.wallet",
+      "inversedBy": "transactions"
+    },
+    "amount": {
+      "type": "decimal",
+      "required": true
+    },
+    "transactionType": {
+      "type": "enumeration",
+      "enum": [
+        "credit",
+        "debit"
+      ],
+      "required": true
+    },
+    "method": {
+      "type": "enumeration",
+      "enum": [
+        "razorPay",
+        "wallet"
+      ],
+      "required": true
+    },
+    "paymentStatus": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "completed",
+        "failed",
+        "refunded"
+      ],
+      "required": true,
+      "default": "pending"
+    }
+  }
+}

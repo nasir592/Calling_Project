@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * call controller
+ * wallet controller
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
-module.exports = createCoreController('api::call.call');
+module.exports = createCoreController('api::wallet.wallet');

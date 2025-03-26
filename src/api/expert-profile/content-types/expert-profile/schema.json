@@ -18,11 +18,38 @@
     "experience": {
       "type": "integer"
     },
-    "user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::public-user.public-user",
-      "inversedBy": "experts"
+    "bio": {
+      "type": "text",
+      "maxLength": 120
+    },
+    "availableFrom": {
+      "type": "time"
+    },
+    "availableTo": {
+      "type": "time"
+    },
+    "daysAvailable": {
+      "type": "enumeration",
+      "enum": [
+        "Monday ",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Saturday",
+        "Sunday"
+      ]
+    },
+    "videoCallRate": {
+      "type": "integer",
+      "default": 0
+    },
+    "voiceCallRate": {
+      "type": "integer",
+      "default": 0
+    },
+    "totalMins": {
+      "type": "biginteger",
+      "default": "0"
     }
   }
 }

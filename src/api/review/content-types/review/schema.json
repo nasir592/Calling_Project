@@ -19,17 +19,11 @@
       "type": "text",
       "maxLength": 100
     },
-    "reviewer": {
+    "user": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::public-user.public-user",
-      "inversedBy": "review"
-    },
-    "experts": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::public-user.public-user",
-      "inversedBy": "review"
+      "inversedBy": "reviews"
     }
   }
 }

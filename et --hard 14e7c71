@@ -1,0 +1,12 @@
+[33m14e7c71[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: reset: moving to origin/main
+[33m14e7c71[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{1}: checkout: moving from main to main
+[33m14e7c71[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{2}: commit: v1
+[33m2e9a029[m HEAD@{3}: commit: v1
+[33m9a86ba7[m HEAD@{4}: pull origin main --rebase (finish): returning to refs/heads/main
+[33m9a86ba7[m HEAD@{5}: pull origin main --rebase (pick): v1
+[33m1743de4[m HEAD@{6}: pull origin main --rebase (pick): v1
+[33mf79cdfe[m HEAD@{7}: pull origin main --rebase (pick): Initial commit from Strapi
+[33m1fce6db[m HEAD@{8}: pull origin main --rebase (start): checkout 1fce6db0ae58cdf60984f034efecd3b3af8a98c2
+[33ma5606bd[m HEAD@{9}: commit: v1
+[33m5e2acaf[m HEAD@{10}: commit: v1
+[33m53e4ce1[m HEAD@{11}: commit (initial): Initial commit from Strapi

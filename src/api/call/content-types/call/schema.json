@@ -4,53 +4,59 @@
   "info": {
     "singularName": "call",
     "pluralName": "calls",
-    "displayName": "Call",
-    "description": ""
+    "displayName": "Call"
   },
   "options": {
     "draftAndPublish": true
   },
   "attributes": {
-    "channelName": {
-      "type": "string",
-      "required": true
-    },
-    "type": {
-      "type": "enumeration",
-      "enum": ["voice", "video"],
-      "required": true
-    },
     "startTime": {
-      "type": "datetime"
+      "type": "datetime",
+      "required": true
     },
     "endTime": {
       "type": "datetime"
     },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "videoCall",
+        "voiceCall"
+      ]
+    },
     "duration": {
-      "type": "decimal"
+      "type": "datetime"
     },
     "totalCost": {
       "type": "decimal"
     },
-    "call_status": {
+    "callStatus": {
       "type": "enumeration",
-      "enum": ["ongoing", "completed", "cancelled"],
-      "default": "ongoing"
+      "enum": [
+        "pending",
+        "ongoing",
+        "completed",
+        "declined",
+        "missed",
+        "busy"
+      ],
+      "default": "pending"
     },
-    "uid": {
-      "type": "integer"
+    "channelName": {
+      "type": "string",
+      "unique": true
     },
     "caller": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::public-user.public-user",
-      "inversedBy": "caller_calls"
+      "inversedBy": "calls"
     },
     "receiver": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::public-user.public-user",
-      "inversedBy": "receiver_calls"
+      "inversedBy": "calls"
     }
   }
 }

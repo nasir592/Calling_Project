@@ -15,63 +15,40 @@
       "type": "string",
       "required": true
     },
-    "username": {
-      "type": "string",
-      "required": true
-    },
-    "email": {
-      "type": "email",
-      "required": true,
-      "unique": true
-    },
     "password": {
       "type": "password",
       "required": true
     },
     "role": {
       "type": "enumeration",
-      "enum": ["General", "Expert"],
+      "enum": [
+        "General",
+        "Expert"
+      ],
       "default": "General",
       "required": true
-    },
-    "walletBalance": {
-      "type": "decimal"
-    },
-    "bio": {
-      "type": "text",
-      "maxLength": 50
     },
     "profilePic": {
       "type": "media",
       "multiple": true,
       "required": false,
-      "allowedTypes": ["images", "files"]
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
     },
-    "posts": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::post.post",
-      "mappedBy": "author"
+    "mobile": {
+      "type": "integer",
+      "required": true,
+      "unique": true
     },
-    "review": {
+    "reviews": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::review.review",
-      "mappedBy": "experts"
-    },
-    "experts": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::expert-profile.expert-profile",
       "mappedBy": "user"
     },
-    "caller_calls": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::call.call",
-      "mappedBy": "caller"
-    },
-    "receiver_calls": {
+    "calls": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::call.call",

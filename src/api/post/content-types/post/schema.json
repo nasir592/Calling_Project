@@ -18,12 +18,6 @@
     "likes": {
       "type": "integer"
     },
-    "author": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::public-user.public-user",
-      "inversedBy": "posts"
-    },
     "media": {
       "allowedTypes": [
         "images",
