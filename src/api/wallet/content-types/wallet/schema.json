@@ -4,17 +4,13 @@
   "info": {
     "singularName": "wallet",
     "pluralName": "wallets",
-    "displayName": "Wallet"
+    "displayName": "Wallet",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "attributes": {
-    "user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::public-user.public-user"
-    },
     "balance": {
       "type": "decimal"
     },
@@ -23,6 +19,10 @@
       "relation": "oneToMany",
       "target": "api::transaction.transaction",
       "mappedBy": "wallet"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

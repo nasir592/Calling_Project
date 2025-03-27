@@ -499,13 +499,17 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    expert_profile: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::expert-profile.expert-profile'
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::public-user.public-user'
     > &
       Schema.Attribute.Private;
-    mobile: Schema.Attribute.Integer &
+    mobile: Schema.Attribute.BigInteger &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
     name: Schema.Attribute.String & Schema.Attribute.Required;
@@ -516,9 +520,14 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
     role: Schema.Attribute.Enumeration<['General', 'Expert']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'General'>;
+    transactions: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::transaction.transaction'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    wallet: Schema.Attribute.Relation<'oneToOne', 'api::wallet.wallet'>;
   };
 }
 
@@ -562,6 +571,7 @@ export interface ApiReviewReview extends Struct.CollectionTypeSchema {
 export interface ApiTransactionTransaction extends Struct.CollectionTypeSchema {
   collectionName: 'transactions';
   info: {
+    description: '';
     displayName: 'Transaction';
     pluralName: 'transactions';
     singularName: 'transaction';
@@ -582,6 +592,7 @@ export interface ApiTransactionTransaction extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     method: Schema.Attribute.Enumeration<['razorPay', 'wallet']> &
       Schema.Attribute.Required;
+    order_Id: Schema.Attribute.Text;
     paymentStatus: Schema.Attribute.Enumeration<
       ['pending', 'completed', 'failed', 'refunded']
     > &
@@ -593,6 +604,10 @@ export interface ApiTransactionTransaction extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::public-user.public-user'
+    >;
     wallet: Schema.Attribute.Relation<'manyToOne', 'api::wallet.wallet'>;
   };
 }
@@ -600,6 +615,7 @@ export interface ApiTransactionTransaction extends Struct.CollectionTypeSchema {
 export interface ApiWalletWallet extends Struct.CollectionTypeSchema {
   collectionName: 'wallets';
   info: {
+    description: '';
     displayName: 'Wallet';
     pluralName: 'wallets';
     singularName: 'wallet';
@@ -612,6 +628,7 @@ export interface ApiWalletWallet extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    isActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -626,7 +643,6 @@ export interface ApiWalletWallet extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<'oneToOne', 'api::public-user.public-user'>;
   };
 }
 

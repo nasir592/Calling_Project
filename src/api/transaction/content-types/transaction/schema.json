@@ -4,7 +4,8 @@
   "info": {
     "singularName": "transaction",
     "pluralName": "transactions",
-    "displayName": "Transaction"
+    "displayName": "Transaction",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -46,6 +47,15 @@
       ],
       "required": true,
       "default": "pending"
+    },
+    "order_Id": {
+      "type": "text"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::public-user.public-user",
+      "inversedBy": "transactions"
     }
   }
 }

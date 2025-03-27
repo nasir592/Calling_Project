@@ -38,7 +38,7 @@
       ]
     },
     "mobile": {
-      "type": "integer",
+      "type": "biginteger",
       "required": true,
       "unique": true
     },
@@ -53,6 +53,22 @@
       "relation": "oneToMany",
       "target": "api::call.call",
       "mappedBy": "receiver"
+    },
+    "expert_profile": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::expert-profile.expert-profile"
+    },
+    "transactions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::transaction.transaction",
+      "mappedBy": "user"
+    },
+    "wallet": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::wallet.wallet"
     }
   }
 }
