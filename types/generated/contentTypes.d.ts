@@ -509,16 +509,13 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
       'api::public-user.public-user'
     > &
       Schema.Attribute.Private;
-    mobile: Schema.Attribute.BigInteger &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
+    mobile: Schema.Attribute.BigInteger & Schema.Attribute.Unique;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    password: Schema.Attribute.Password & Schema.Attribute.Required;
+    password: Schema.Attribute.Password;
     profilePic: Schema.Attribute.Media<'images' | 'files', true>;
     publishedAt: Schema.Attribute.DateTime;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
     role: Schema.Attribute.Enumeration<['General', 'Expert']> &
-      Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'General'>;
     transactions: Schema.Attribute.Relation<
       'oneToMany',

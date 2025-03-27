@@ -41,88 +41,70 @@ module.exports = {
         }
       },
       
+    
+      async verifyPayment(ctx) {
+        try {
+          const { razorpay_order_id, razorpay_payment_id, razorpay_signature, amount, userId =14 } = ctx.request.body;
       
-  async verifyPayment(ctx) {
-    try {
-      const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-        ctx.request.body;
-
-      const generatedSignature = crypto
-        .createHmac("sha256", "C6Hum3AeL2EV6VvMnD2MmrEz")
-        .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-        .digest("hex");
-
-      if (generatedSignature === razorpay_signature) {
-        return ctx.send({ success: true, message: "Payment verified" });
-      } else {
-        return ctx.throw(400, "Invalid signature");
-      }
-    } catch (error) {
-      console.error("Error verifying payment:", error);
-      ctx.throw(500, "Error verifying payment");
-    }
-  },
-  
-  async verifyPayment(ctx) {
-    try {
-      const { razorpay_order_id, razorpay_payment_id, razorpay_signature, amount, userId } = ctx.request.body; // Ensure userId is sent from frontend
-
-      console.log("🔹 Received Data:", ctx.request.body);
-
-      const secret = process.env.RAZORPAY_KEY_SECRET;
-      if (!secret) {
-        console.error("❌ Razorpay secret key is missing in environment variables");
-        return ctx.throw(500, "Server configuration error");
-      }
-
-      // ✅ Generate expected signature
-      const generatedSignature = crypto
-        .createHmac("sha256", secret)
-        .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-        .digest("hex");
-
-      console.log("🔹 Generated Signature:", generatedSignature);
-      console.log("🔹 Received Signature:", razorpay_signature);
-
-      // ✅ Verify signature
-      if (generatedSignature === razorpay_signature) {
-        console.log("✅ Payment Verified Successfully!");
-        
-        userId = 14;
-
-        // 🔹 Fetch user wallet
-        let user = await strapi.entityService.findOne("plugin::users-permissions.user", userId, {
-          populate: ["wallet"], 
-        });
-
-        if (!user) {
-          return ctx.throw(404, "User not found");
+          console.log("🔹 Received Data:", ctx.request.body);
+      
+          const secret = process.env.RAZORPAY_KEY_SECRET;
+          if (!secret) {
+            console.error("❌ Razorpay secret key is missing in environment variables");
+            return ctx.throw(500, "Server configuration error");
+          }
+      
+          // ✅ Generate expected signature
+          const generatedSignature = crypto
+            .createHmac("sha256", secret)
+            .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+            .digest("hex");
+      
+          console.log("🔹 Generated Signature:", generatedSignature);
+          console.log("🔹 Received Signature:", razorpay_signature);
+      
+          // ✅ Verify signature
+          if (generatedSignature === razorpay_signature) {
+            console.log("✅ Payment Verified Successfully!");
+      
+            // 🔹 Fetch user from public-user collection
+            const user = await strapi.entityService.findOne("api::public-user.public-user", userId, {
+              populate: ["wallet"],
+            });
+      
+            if (!user) {
+              console.error("❌ User not found!");
+              return ctx.throw(404, "User not found");
+            }
+      
+            // 🔹 Calculate new wallet balance
+            let walletBalance = user.wallet?.balance || 0;
+            let newBalance = walletBalance + amount / 100; // Convert from paise to INR
+      
+            console.log(`🔹 Current Balance: ${walletBalance}, Adding: ${amount / 100}, New Balance: ${newBalance}`);
+      
+            // 🔹 Update user wallet
+            await strapi.entityService.update("api::public-user.public-user", userId, {
+              data: {
+                wallet: {
+                  balance: newBalance,
+                },
+              },
+            });
+      
+            console.log("✅ Wallet updated successfully!");
+      
+            return ctx.send({ success: true, message: "Payment verified and wallet updated", newBalance });
+          } else {
+            console.error("❌ Signature Mismatch!");
+            return ctx.throw(401, "Unauthorized - Invalid signature");
+          }
+        } catch (error) {
+          console.error("❌ Error verifying payment:", error);
+          ctx.throw(500, "Error verifying payment");
         }
-
-        let walletBalance = user.wallet?.balance || 0;
-        let newBalance = walletBalance + amount / 100; // Convert from paise to INR
-
-        // 🔹 Update user wallet
-        await strapi.entityService.update("plugin::users-permissions.user", userId, {
-          data: {
-            wallet: {
-              balance: newBalance,
-            },
-          },
-        });
-
-        console.log("✅ Wallet updated successfully!");
-
-        return ctx.send({ success: true, message: "Payment verified and wallet updated", newBalance });
-      } else {
-        console.error("❌ Signature Mismatch!");
-        return ctx.throw(401, "Unauthorized - Invalid signature");
-      }
-    } catch (error) {
-      console.error("❌ Error verifying payment:", error);
-      ctx.throw(500, "Error verifying payment");
-    }
-  },
+      },
+      
 
   async withdrawMoney(ctx) {
     try {

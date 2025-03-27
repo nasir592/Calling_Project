@@ -96,7 +96,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
       const startTime = new Date(call.startTime);
       const duration = Math.ceil((endTime - startTime) / 60000); // Convert ms to minutes, round up
 
-      call.caller.id = 29;
+    
       // Fetch caller & receiver details
       const caller = await strapi.entityService.findOne(
         "api::public-user.public-user",
