@@ -48,7 +48,7 @@ jobs:
       - name: Deployed 🥳
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
-            cd htdocs/Dappnity-Backend
+            cd htdocs/ce-backend
       
             # If your repo is public, this isn't needed. If private and using SSH remote, still not needed.
             # git config --global url.'https://${{ secrets.SECRETS }}@github.com/'.insteadOf 'https://github.com/'
