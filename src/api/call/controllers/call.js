@@ -6,8 +6,16 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
     async generateCallToken(ctx) {
         try {
           const { uid, role, callerId, receiverId,type } = ctx.request.body;
-          const appId = process.env.AGORA_APP_ID;
-          const appCertificate = process.env.AGORA_APP_CERTIFICATE;
+
+          const settings = await strapi.entityService.findOne("api::app-config.app-config", 1);
+
+          if (!settings || !settings.Agora_App_Id || !settings.Agora_App_Certificate) {
+              return ctx.badRequest({ message: "Missing configuration settings Jwt Secert Key." });
+          }
+          
+          const appId = settings.Agora_App_Id;
+          const appCertificate = settings.Agora_App_Certificate;
+
           const expirationTime = Math.floor(Date.now() / 1000) + 3600;
     
           if (!appId || !appCertificate) {
@@ -15,7 +23,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
           }
     
           // ✅ Validate input
-          if (!uid || !callerId || !receiverId || !type) {
+          if (!callerId || !receiverId || !type) {
             return ctx.badRequest("Missing required parameters: uid, callerId, or receiverId.");
           }
     

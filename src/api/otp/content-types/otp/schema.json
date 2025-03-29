@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "otps",
+  "info": {
+    "singularName": "otp",
+    "pluralName": "otps",
+    "displayName": "Otp"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "mobile": {
+      "type": "biginteger",
+      "unique": true
+    },
+    "otp": {
+      "type": "integer"
+    },
+    "expireTime": {
+      "type": "datetime"
+    }
+  }
+}

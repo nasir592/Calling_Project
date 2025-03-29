@@ -369,6 +369,41 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAppConfigAppConfig extends Struct.SingleTypeSchema {
+  collectionName: 'app_configs';
+  info: {
+    description: '';
+    displayName: 'App_Config';
+    pluralName: 'app-configs';
+    singularName: 'app-config';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Agora_App_Certificate: Schema.Attribute.Text;
+    Agora_App_Id: Schema.Attribute.Text;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Jwt_Secret_Key: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::app-config.app-config'
+    > &
+      Schema.Attribute.Private;
+    Msg_Auth_Key: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    RazorPay_Id: Schema.Attribute.Text;
+    RazorPay_Key_Secret: Schema.Attribute.Text;
+    Template_Id: Schema.Attribute.Text;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCallCall extends Struct.CollectionTypeSchema {
   collectionName: 'calls';
   info: {
@@ -454,6 +489,33 @@ export interface ApiExpertProfileExpertProfile
   };
 }
 
+export interface ApiOtpOtp extends Struct.CollectionTypeSchema {
+  collectionName: 'otps';
+  info: {
+    displayName: 'Otp';
+    pluralName: 'otps';
+    singularName: 'otp';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    expireTime: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::otp.otp'> &
+      Schema.Attribute.Private;
+    mobile: Schema.Attribute.BigInteger & Schema.Attribute.Unique;
+    otp: Schema.Attribute.Integer;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiPostPost extends Struct.CollectionTypeSchema {
   collectionName: 'posts';
   info: {
@@ -511,7 +573,6 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     mobile: Schema.Attribute.BigInteger & Schema.Attribute.Unique;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    password: Schema.Attribute.Password;
     profilePic: Schema.Attribute.Media<'images' | 'files', true>;
     publishedAt: Schema.Attribute.DateTime;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
@@ -1152,8 +1213,10 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::app-config.app-config': ApiAppConfigAppConfig;
       'api::call.call': ApiCallCall;
       'api::expert-profile.expert-profile': ApiExpertProfileExpertProfile;
+      'api::otp.otp': ApiOtpOtp;
       'api::post.post': ApiPostPost;
       'api::public-user.public-user': ApiPublicUserPublicUser;
       'api::review.review': ApiReviewReview;

@@ -1,0 +1,36 @@
+{
+  "kind": "singleType",
+  "collectionName": "app_configs",
+  "info": {
+    "singularName": "app-config",
+    "pluralName": "app-configs",
+    "displayName": "App_Config",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "Agora_App_Id": {
+      "type": "text"
+    },
+    "Agora_App_Certificate": {
+      "type": "text"
+    },
+    "RazorPay_Id": {
+      "type": "text"
+    },
+    "RazorPay_Key_Secret": {
+      "type": "text"
+    },
+    "Msg_Auth_Key": {
+      "type": "text"
+    },
+    "Template_Id": {
+      "type": "text"
+    },
+    "Jwt_Secret_Key": {
+      "type": "text"
+    }
+  }
+}
