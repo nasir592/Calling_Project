@@ -7,16 +7,6 @@ module.exports = ({ env }) => {
   
     postgres: {
 
-      // connection: {
-        
-      //   host: "localhost",
-      //   port: "5433",
-      //   database: "Ce_Calling",
-      //   user: "postgres",
-      //   password: "postgres",
-      //   ssl:false,
-      //   schema: env('DATABASE_SCHEMA', 'public'),
-      // }
       connection: {
         connectionString: env('DATABASE_URL'),
         host: env('DATABASE_HOST', 'localhost'),
