@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_schedule_availabilities",
+  "info": {
+    "displayName": "availability"
+  },
+  "options": {},
+  "attributes": {
+    "days": {
+      "type": "enumeration",
+      "enum": [
+        "Monday",
+        "Tuesday ",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ]
+    },
+    "startTime": {
+      "type": "time"
+    },
+    "endTime": {
+      "type": "time"
+    }
+  }
+}

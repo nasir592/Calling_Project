@@ -446,6 +446,39 @@ export interface ApiCallCall extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
+  collectionName: 'categories';
+  info: {
+    description: '';
+    displayName: 'Category';
+    pluralName: 'categories';
+    singularName: 'category';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::category.category'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::expert-profile.expert-profile'
+    >;
+  };
+}
+
 export interface ApiExpertProfileExpertProfile
   extends Struct.CollectionTypeSchema {
   collectionName: 'expert_profiles';
@@ -459,19 +492,21 @@ export interface ApiExpertProfileExpertProfile
     draftAndPublish: true;
   };
   attributes: {
-    availableFrom: Schema.Attribute.Time;
-    availableTo: Schema.Attribute.Time;
-    bio: Schema.Attribute.Text &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 120;
-      }>;
+    CallType: Schema.Attribute.Enumeration<['VoiceCall', 'VideoCall']>;
+    categories: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::category.category'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    daysAvailable: Schema.Attribute.Enumeration<
-      ['Monday ', 'Tuesday', 'Wednesday', 'Thursday', 'Saturday', 'Sunday']
-    >;
+    descriptions: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 120;
+      }>;
     experience: Schema.Attribute.Integer;
+    handler: Schema.Attribute.String & Schema.Attribute.Unique;
+    languages: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -479,13 +514,14 @@ export interface ApiExpertProfileExpertProfile
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    rates: Schema.Attribute.Component<'rate.rates', false>;
+    schedule: Schema.Attribute.Component<'schedule.availability', true>;
     specialization: Schema.Attribute.String & Schema.Attribute.Required;
+    tagline: Schema.Attribute.String;
     totalMins: Schema.Attribute.BigInteger & Schema.Attribute.DefaultTo<'0'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    videoCallRate: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    voiceCallRate: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
   };
 }
 
@@ -601,10 +637,7 @@ export interface ApiReviewReview extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    comments: Schema.Attribute.Text &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
+    comments: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -615,7 +648,7 @@ export interface ApiReviewReview extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    rating: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    rating: Schema.Attribute.Integer;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1215,6 +1248,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::app-config.app-config': ApiAppConfigAppConfig;
       'api::call.call': ApiCallCall;
+      'api::category.category': ApiCategoryCategory;
       'api::expert-profile.expert-profile': ApiExpertProfileExpertProfile;
       'api::otp.otp': ApiOtpOtp;
       'api::post.post': ApiPostPost;

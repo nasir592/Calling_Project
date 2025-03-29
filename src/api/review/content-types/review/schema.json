@@ -12,12 +12,10 @@
   },
   "attributes": {
     "rating": {
-      "type": "decimal",
-      "required": true
+      "type": "integer"
     },
     "comments": {
-      "type": "text",
-      "maxLength": 100
+      "type": "text"
     },
     "user": {
       "type": "relation",
