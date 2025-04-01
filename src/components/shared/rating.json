@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_shared_ratings",
+  "info": {
+    "displayName": "RatingSummary",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "average": {
+      "type": "decimal",
+      "default": 0
+    },
+    "count": {
+      "type": "decimal",
+      "default": 0
+    }
+  }
+}

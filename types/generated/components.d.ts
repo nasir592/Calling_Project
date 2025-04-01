@@ -12,18 +12,6 @@ export interface RateRates extends Struct.ComponentSchema {
   };
 }
 
-export interface ReviewReviews extends Struct.ComponentSchema {
-  collectionName: 'components_review_reviews';
-  info: {
-    displayName: 'Reviews';
-  };
-  attributes: {
-    comments: Schema.Attribute.Text;
-    name: Schema.Attribute.String;
-    rating: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-  };
-}
-
 export interface ScheduleAvailability extends Struct.ComponentSchema {
   collectionName: 'components_schedule_availabilities';
   info: {
@@ -46,12 +34,24 @@ export interface ScheduleAvailability extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedRating extends Struct.ComponentSchema {
+  collectionName: 'components_shared_ratings';
+  info: {
+    description: '';
+    displayName: 'RatingSummary';
+  };
+  attributes: {
+    average: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    count: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'rate.rates': RateRates;
-      'review.reviews': ReviewReviews;
       'schedule.availability': ScheduleAvailability;
+      'shared.rating': SharedRating;
     }
   }
 }

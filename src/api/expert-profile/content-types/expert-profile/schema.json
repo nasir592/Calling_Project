@@ -32,13 +32,6 @@
       "target": "api::category.category",
       "mappedBy": "user"
     },
-    "CallType": {
-      "type": "enumeration",
-      "enum": [
-        "VoiceCall",
-        "VideoCall"
-      ]
-    },
     "languages": {
       "type": "text"
     },
@@ -58,6 +51,22 @@
       "type": "component",
       "repeatable": false,
       "component": "rate.rates"
+    },
+    "ratings": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.rating"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::public-user.public-user"
+    },
+    "reviews": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::review.review",
+      "mappedBy": "expert"
     }
   }
 }

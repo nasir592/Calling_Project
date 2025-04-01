@@ -492,7 +492,6 @@ export interface ApiExpertProfileExpertProfile
     draftAndPublish: true;
   };
   attributes: {
-    CallType: Schema.Attribute.Enumeration<['VoiceCall', 'VideoCall']>;
     categories: Schema.Attribute.Relation<
       'oneToMany',
       'api::category.category'
@@ -515,6 +514,8 @@ export interface ApiExpertProfileExpertProfile
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     rates: Schema.Attribute.Component<'rate.rates', false>;
+    ratings: Schema.Attribute.Component<'shared.rating', false>;
+    reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
     schedule: Schema.Attribute.Component<'schedule.availability', true>;
     specialization: Schema.Attribute.String & Schema.Attribute.Required;
     tagline: Schema.Attribute.String;
@@ -522,6 +523,7 @@ export interface ApiExpertProfileExpertProfile
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<'oneToOne', 'api::public-user.public-user'>;
   };
 }
 
@@ -597,7 +599,7 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    expert_profile: Schema.Attribute.Relation<
+    expert: Schema.Attribute.Relation<
       'oneToOne',
       'api::expert-profile.expert-profile'
     >;
@@ -641,6 +643,10 @@ export interface ApiReviewReview extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    expert: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::expert-profile.expert-profile'
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

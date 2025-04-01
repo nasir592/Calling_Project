@@ -7,18 +7,19 @@ const jwtSecret = "JWT_SECRET";
 
 
 
-const MSG91_AUTH_KEY = "288639AVtamNkm63a014e0P1"; // Your MSG91 API Key
-const TEMPLATE_ID = "6569ce42d6fc053ccb32e472"; // Your MSG91 
 
 module.exports = createCoreController("api::otp.otp", ({ strapi }) => ({
   async sendOtp(ctx) {
 
-
+try {
+    
     const settings = await strapi.entityService.findOne("api::app-config.app-config", 1);
 
 if (!settings || !settings.Template_Id || !settings.Msg_Auth_Key) {
     return ctx.badRequest({ message: "Missing configuration settings." });
 }
+console.log(settings);
+
 
     const templateId = settings.Template_Id;
    const MSG91_AUTH_KEY = settings.Msg_Auth_Key;
@@ -45,6 +46,12 @@ if (!settings || !settings.Template_Id || !settings.Msg_Auth_Key) {
     });
 
     return ctx.send({ message: "OTP sent successfully" });
+
+} catch (error) {
+    console.log(error);
+    
+    return ctx.send({ message: "Error sending OTP" });
+}
   },
 
 

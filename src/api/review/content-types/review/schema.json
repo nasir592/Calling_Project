@@ -22,6 +22,12 @@
       "relation": "manyToOne",
       "target": "api::public-user.public-user",
       "inversedBy": "reviews"
+    },
+    "expert": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::expert-profile.expert-profile",
+      "inversedBy": "reviews"
     }
   }
 }
