@@ -6,6 +6,7 @@ module.exports = ({ env }) => {
   const connections = {
   
     postgres: {
+
       connection: {
         connectionString: env('DATABASE_URL'),
         host: env('DATABASE_HOST', 'localhost'),

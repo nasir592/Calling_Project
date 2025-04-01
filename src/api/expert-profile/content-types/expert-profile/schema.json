@@ -18,38 +18,46 @@
     "experience": {
       "type": "integer"
     },
-    "bio": {
+    "descriptions": {
       "type": "text",
       "maxLength": 120
-    },
-    "availableFrom": {
-      "type": "time"
-    },
-    "availableTo": {
-      "type": "time"
-    },
-    "daysAvailable": {
-      "type": "enumeration",
-      "enum": [
-        "Monday ",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Saturday",
-        "Sunday"
-      ]
-    },
-    "videoCallRate": {
-      "type": "integer",
-      "default": 0
-    },
-    "voiceCallRate": {
-      "type": "integer",
-      "default": 0
     },
     "totalMins": {
       "type": "biginteger",
       "default": "0"
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::category.category",
+      "mappedBy": "user"
+    },
+    "CallType": {
+      "type": "enumeration",
+      "enum": [
+        "VoiceCall",
+        "VideoCall"
+      ]
+    },
+    "languages": {
+      "type": "text"
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "handler": {
+      "type": "string",
+      "unique": true
+    },
+    "schedule": {
+      "type": "component",
+      "repeatable": true,
+      "component": "schedule.availability"
+    },
+    "rates": {
+      "type": "component",
+      "repeatable": false,
+      "component": "rate.rates"
     }
   }
 }

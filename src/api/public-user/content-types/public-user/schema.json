@@ -15,10 +15,6 @@
       "type": "string",
       "required": true
     },
-    "password": {
-      "type": "password",
-      "required": false
-    },
     "role": {
       "type": "enumeration",
       "enum": [
@@ -42,12 +38,6 @@
       "required": false,
       "unique": true
     },
-    "reviews": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::review.review",
-      "mappedBy": "user"
-    },
     "calls": {
       "type": "relation",
       "relation": "oneToMany",
@@ -69,6 +59,12 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::wallet.wallet"
+    },
+    "reviews": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::review.review",
+      "mappedBy": "user"
     }
   }
 }

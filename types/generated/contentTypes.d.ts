@@ -369,6 +369,41 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAppConfigAppConfig extends Struct.SingleTypeSchema {
+  collectionName: 'app_configs';
+  info: {
+    description: '';
+    displayName: 'App_Config';
+    pluralName: 'app-configs';
+    singularName: 'app-config';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Agora_App_Certificate: Schema.Attribute.Text;
+    Agora_App_Id: Schema.Attribute.Text;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Jwt_Secret_Key: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::app-config.app-config'
+    > &
+      Schema.Attribute.Private;
+    Msg_Auth_Key: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    RazorPay_Id: Schema.Attribute.Text;
+    RazorPay_Key_Secret: Schema.Attribute.Text;
+    Template_Id: Schema.Attribute.Text;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCallCall extends Struct.CollectionTypeSchema {
   collectionName: 'calls';
   info: {
@@ -411,6 +446,39 @@ export interface ApiCallCall extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
+  collectionName: 'categories';
+  info: {
+    description: '';
+    displayName: 'Category';
+    pluralName: 'categories';
+    singularName: 'category';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::category.category'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::expert-profile.expert-profile'
+    >;
+  };
+}
+
 export interface ApiExpertProfileExpertProfile
   extends Struct.CollectionTypeSchema {
   collectionName: 'expert_profiles';
@@ -424,19 +492,21 @@ export interface ApiExpertProfileExpertProfile
     draftAndPublish: true;
   };
   attributes: {
-    availableFrom: Schema.Attribute.Time;
-    availableTo: Schema.Attribute.Time;
-    bio: Schema.Attribute.Text &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 120;
-      }>;
+    CallType: Schema.Attribute.Enumeration<['VoiceCall', 'VideoCall']>;
+    categories: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::category.category'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    daysAvailable: Schema.Attribute.Enumeration<
-      ['Monday ', 'Tuesday', 'Wednesday', 'Thursday', 'Saturday', 'Sunday']
-    >;
+    descriptions: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 120;
+      }>;
     experience: Schema.Attribute.Integer;
+    handler: Schema.Attribute.String & Schema.Attribute.Unique;
+    languages: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -444,13 +514,41 @@ export interface ApiExpertProfileExpertProfile
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    rates: Schema.Attribute.Component<'rate.rates', false>;
+    schedule: Schema.Attribute.Component<'schedule.availability', true>;
     specialization: Schema.Attribute.String & Schema.Attribute.Required;
+    tagline: Schema.Attribute.String;
     totalMins: Schema.Attribute.BigInteger & Schema.Attribute.DefaultTo<'0'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    videoCallRate: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    voiceCallRate: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+  };
+}
+
+export interface ApiOtpOtp extends Struct.CollectionTypeSchema {
+  collectionName: 'otps';
+  info: {
+    displayName: 'Otp';
+    pluralName: 'otps';
+    singularName: 'otp';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    expireTime: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::otp.otp'> &
+      Schema.Attribute.Private;
+    mobile: Schema.Attribute.BigInteger & Schema.Attribute.Unique;
+    otp: Schema.Attribute.Integer;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -511,7 +609,6 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     mobile: Schema.Attribute.BigInteger & Schema.Attribute.Unique;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    password: Schema.Attribute.Password;
     profilePic: Schema.Attribute.Media<'images' | 'files', true>;
     publishedAt: Schema.Attribute.DateTime;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
@@ -540,10 +637,7 @@ export interface ApiReviewReview extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    comments: Schema.Attribute.Text &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
+    comments: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -554,7 +648,7 @@ export interface ApiReviewReview extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    rating: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    rating: Schema.Attribute.Integer;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1152,8 +1246,11 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::app-config.app-config': ApiAppConfigAppConfig;
       'api::call.call': ApiCallCall;
+      'api::category.category': ApiCategoryCategory;
       'api::expert-profile.expert-profile': ApiExpertProfileExpertProfile;
+      'api::otp.otp': ApiOtpOtp;
       'api::post.post': ApiPostPost;
       'api::public-user.public-user': ApiPublicUserPublicUser;
       'api::review.review': ApiReviewReview;

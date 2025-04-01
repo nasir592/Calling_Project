@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_rate_rates",
+  "info": {
+    "displayName": "Rates",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "voiceCallRate": {
+      "type": "decimal"
+    },
+    "videoCallRate": {
+      "type": "decimal"
+    }
+  }
+}
