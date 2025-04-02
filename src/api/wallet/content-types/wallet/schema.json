@@ -23,6 +23,12 @@
     "isActive": {
       "type": "boolean",
       "default": false
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::public-user.public-user",
+       "inversedBy": "wallet"
     }
   }
 }

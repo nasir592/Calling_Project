@@ -1,46 +1,29 @@
 'use strict';
-
 module.exports = {
   routes: [
     {
-      method: 'POST',
-      path: '/payment-gateway/initiate',
-      handler: 'payment-gateway.initiatePayment',
+      method: "POST",
+      path: "/payu/initiate",
+      handler: "payment-gateway.initiatePayment",
       config: {
-        auth: false,
-        policies: [],
-        middlewares: [],
+        auth: false, // Change to true if authentication is required
       },
     },
     {
-      method: 'POST',
-      path: '/payment-gateway/response',
-      handler: 'payment-gateway.handleResponse',
+      method: "POST",
+      path: "/payu/success",
+      handler: "payment-gateway.handlePaymentResponse",
       config: {
         auth: false,
-        policies: [],
-        middlewares: [],
       },
     },
     {
-      method: 'POST',
-      path: '/payment-gateway/success',
-      handler: 'payment-gateway.success',
+      method: "POST",
+      path: "/payu/failure",
+      handler: "payment-gateway.handlePaymentResponse",
       config: {
         auth: false,
-        policies: [],
-        middlewares: [],
       },
     },
-    {
-      method: 'POST',
-      path: '/payment-gateway/failure',
-      handler: 'payment-gateway.failure',
-      config: {
-        auth: false,
-        policies: [],
-        middlewares: [],
-      },
-    }
   ],
 };

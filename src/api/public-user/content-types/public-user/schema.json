@@ -18,10 +18,10 @@
     "role": {
       "type": "enumeration",
       "enum": [
-        "General",
+        "Client",
         "Expert"
       ],
-      "default": "General",
+      "default": "Client",
       "required": false
     },
     "profilePic": {

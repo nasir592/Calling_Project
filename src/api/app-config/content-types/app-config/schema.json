@@ -31,6 +31,12 @@
     },
     "Jwt_Secret_Key": {
       "type": "text"
+    },
+    "Payment_MerchantKey": {
+      "type": "text"
+    },
+    "Payment_Salt": {
+      "type": "text"
     }
   }
 }

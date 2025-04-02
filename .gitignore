@@ -130,3 +130,7 @@ build
 .strapi-updater.json
 .strapi-cloud.json
 .env
+
+
+# Ignore package-lock.json
+package-lock.json

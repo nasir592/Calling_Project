@@ -394,6 +394,8 @@ export interface ApiAppConfigAppConfig extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     Msg_Auth_Key: Schema.Attribute.Text;
+    Payment_MerchantKey: Schema.Attribute.Text;
+    Payment_Salt: Schema.Attribute.Text;
     publishedAt: Schema.Attribute.DateTime;
     RazorPay_Id: Schema.Attribute.Text;
     RazorPay_Key_Secret: Schema.Attribute.Text;
@@ -614,8 +616,8 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
     profilePic: Schema.Attribute.Media<'images' | 'files', true>;
     publishedAt: Schema.Attribute.DateTime;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
-    role: Schema.Attribute.Enumeration<['General', 'Expert']> &
-      Schema.Attribute.DefaultTo<'General'>;
+    role: Schema.Attribute.Enumeration<['Client', 'Expert']> &
+      Schema.Attribute.DefaultTo<'Client'>;
     transactions: Schema.Attribute.Relation<
       'oneToMany',
       'api::transaction.transaction'
@@ -740,6 +742,7 @@ export interface ApiWalletWallet extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<'oneToOne', 'api::public-user.public-user'>;
   };
 }
 
