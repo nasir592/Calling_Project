@@ -12,7 +12,7 @@
   },
   "attributes": {
     "rating": {
-      "type": "integer"
+      "type": "decimal"
     },
     "comments": {
       "type": "text"
@@ -25,8 +25,9 @@
     },
     "user": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::public-user.public-user"
+      "relation": "manyToOne",
+      "target": "api::public-user.public-user",
+      "inversedBy": "reviews"
     }
   }
 }

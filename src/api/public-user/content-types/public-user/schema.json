@@ -8,7 +8,7 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "attributes": {
     "name": {
@@ -18,10 +18,10 @@
     "role": {
       "type": "enumeration",
       "enum": [
-        "General",
+        "Client",
         "Expert"
       ],
-      "default": "General",
+      "default": "Client",
       "required": false
     },
     "profilePic": {
@@ -48,15 +48,31 @@
       "relation": "oneToMany",
       "target": "api::transaction.transaction"
     },
-    "reviews": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::review.review"
-    },
     "expert": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::expert-profile.expert-profile"
+      "target": "api::expert-profile.expert-profile",
+      "mappedBy": "user"
+    },
+    "reviews": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::review.review",
+      "mappedBy": "user"
+    },
+    "wallet": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::wallet.wallet",
+      "mappedBy": "user"
+    },
+    "email": {
+      "type": "email",
+      "unique": true
+    },
+    "isLive": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

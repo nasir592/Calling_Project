@@ -15,6 +15,7 @@
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
   "dependencies": {
+    "@strapi/design-system": "^1.19.0",
     "@strapi/plugin-cloud": "5.11.3",
     "@strapi/plugin-users-permissions": "5.11.3",
     "@strapi/strapi": "5.11.3",
@@ -22,6 +23,7 @@
     "axios": "^1.8.4",
     "crypto": "^1.0.1",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.10.0",
     "pg": "8.8.0",
     "qrcode": "^1.5.4",
     "razorpay": "^2.9.6",

@@ -386,6 +386,7 @@ export interface ApiAppConfigAppConfig extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Email: Schema.Attribute.Email;
     Jwt_Secret_Key: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -414,7 +415,7 @@ export interface ApiCallCall extends Struct.CollectionTypeSchema {
     singularName: 'call';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     caller: Schema.Attribute.Relation<
@@ -453,7 +454,7 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
     singularName: 'category';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
@@ -512,7 +513,6 @@ export interface ApiExpertProfileExpertProfile
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     rates: Schema.Attribute.Component<'rate.rates', false>;
-    ratings: Schema.Attribute.Component<'shared.rating', false>;
     reviewCount: Schema.Attribute.Integer;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
     schedule: Schema.Attribute.Component<'schedule.availability', true>;
@@ -534,7 +534,7 @@ export interface ApiOtpOtp extends Struct.CollectionTypeSchema {
     singularName: 'otp';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
@@ -591,17 +591,19 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
     singularName: 'public-user';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     calls: Schema.Attribute.Relation<'oneToMany', 'api::call.call'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    email: Schema.Attribute.Email & Schema.Attribute.Unique;
     expert: Schema.Attribute.Relation<
       'oneToOne',
       'api::expert-profile.expert-profile'
     >;
+    isLive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -613,8 +615,8 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
     profilePic: Schema.Attribute.Media<'images' | 'files', true>;
     publishedAt: Schema.Attribute.DateTime;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
-    role: Schema.Attribute.Enumeration<['General', 'Expert']> &
-      Schema.Attribute.DefaultTo<'General'>;
+    role: Schema.Attribute.Enumeration<['Client', 'Expert']> &
+      Schema.Attribute.DefaultTo<'Client'>;
     transactions: Schema.Attribute.Relation<
       'oneToMany',
       'api::transaction.transaction'
@@ -622,6 +624,7 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    wallet: Schema.Attribute.Relation<'oneToOne', 'api::wallet.wallet'>;
   };
 }
 
@@ -652,12 +655,12 @@ export interface ApiReviewReview extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    rating: Schema.Attribute.Integer;
+    rating: Schema.Attribute.Decimal;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     user: Schema.Attribute.Relation<
-      'oneToMany',
+      'manyToOne',
       'api::public-user.public-user'
     >;
   };
@@ -672,7 +675,7 @@ export interface ApiTransactionTransaction extends Struct.CollectionTypeSchema {
     singularName: 'transaction';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     amount: Schema.Attribute.Decimal & Schema.Attribute.Required;
@@ -699,6 +702,11 @@ export interface ApiTransactionTransaction extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::public-user.public-user'
+    >;
+    wallet: Schema.Attribute.Relation<'manyToOne', 'api::wallet.wallet'>;
   };
 }
 
@@ -711,7 +719,7 @@ export interface ApiWalletWallet extends Struct.CollectionTypeSchema {
     singularName: 'wallet';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     balance: Schema.Attribute.Decimal;

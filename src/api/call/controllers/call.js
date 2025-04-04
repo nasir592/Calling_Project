@@ -17,7 +17,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
 
       const appId = settings.Agora_App_Id;
       const appCertificate = settings.Agora_App_Certificate;
-      const firebaseKey = settings.Firebase_Server_Key;
+      const firebaseKey = "AIzaSyAEPCBqd9HY5ltEqem3L_3aQ_EuMHN1UGY";
       const expirationTime = Math.floor(Date.now() / 1000) + 3600;
 
       if (!callerId || !receiverId || !type) {

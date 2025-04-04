@@ -7,7 +7,7 @@
     "displayName": "Call"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "attributes": {
     "startTime": {

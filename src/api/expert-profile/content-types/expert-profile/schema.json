@@ -43,15 +43,11 @@
       "repeatable": false,
       "component": "rate.rates"
     },
-    "ratings": {
-      "type": "component",
-      "repeatable": false,
-      "component": "shared.rating"
-    },
     "user": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::public-user.public-user"
+      "target": "api::public-user.public-user",
+      "inversedBy": "expert"
     },
     "reviews": {
       "type": "relation",
@@ -61,11 +57,9 @@
     },
     "averageRating": {
       "type": "decimal"
-    
     },
     "reviewCount": {
       "type": "integer"
-      
     },
     "categories": {
       "type": "relation",

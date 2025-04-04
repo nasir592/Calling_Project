@@ -37,6 +37,9 @@
     },
     "Payment_Salt": {
       "type": "text"
+    },
+    "Email": {
+      "type": "email"
     }
   }
 }

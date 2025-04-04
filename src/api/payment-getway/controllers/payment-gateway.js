@@ -1,13 +1,17 @@
+
 const crypto = require("crypto");
 
-
+const axios = require('axios');
 
 
 module.exports = {
   async initiatePayment(ctx) {
 
 
-    const settings = await strapi.entityService.findOne("api::app-config.app-config", 1);
+    console.log(ctx.request.body);
+    const settings = await strapi.entityService.findMany("api::app-config.app-config", { limit: 1 });
+    console.log("Settings:", settings);
+    
 
 if (!settings || !settings.Payment_MerchantKey || !settings.Payment_Salt) {
     return ctx.badRequest({ message: "Missing configuration settings likes Key." });
@@ -17,6 +21,7 @@ const merchantKey = settings.Payment_MerchantKey;
 const salt = settings.Payment_Salt;
 
 
+console.log(ctx.request.body);
 
 
     try {
@@ -25,6 +30,9 @@ const salt = settings.Payment_Salt;
       if (!amount || !userId || !phone) {
         return ctx.badRequest("Missing required fields");
       }
+
+      console.log(ctx.request.body);
+      
 
       const txnId = `TXN${userId}_${Date.now()}`;;
       const productInfo = "Wallet Recharge";
@@ -57,8 +65,12 @@ const salt = settings.Payment_Salt;
 
   async handlePaymentResponse(ctx) {
 
-    const settings = await strapi.entityService.findOne("api::app-config.app-config", 1);
+   
 
+    const settings = await strapi.entityService.findMany("api::app-config.app-config", 1);
+
+    console.log(settings);
+    
     if (!settings || !settings.Payment_MerchantKey || !settings.Payment_Salt) {
     return ctx.badRequest({ message: "Missing configuration settings likes Key." });
       }
@@ -81,7 +93,6 @@ const salt = settings.Payment_Salt;
       
       } = ctx.request.body;
   
-      console.log("body"+ ctx.request.body);
       
        // User ID (if applicable)
 
@@ -100,12 +111,10 @@ const salt = settings.Payment_Salt;
         hashString = `${salt}|${status}||||||||||${userId}|${emailStr}|${firstnameStr}|${productinfo}|${amountStr}|${txnidStr}|${merchantKey}`;
       }
   
-      console.log("🔹 Hash String Before Hashing:", hashString);
+
   
       const calculatedHash = crypto.createHash("sha512").update(hashString).digest("hex");
   
-      console.log("🔹 Generated Hash:", calculatedHash);
-      console.log("🔹 Received Hash:", receivedHash);
   
       if (calculatedHash !== receivedHash) {
         return ctx.send({
@@ -201,13 +210,77 @@ const salt = settings.Payment_Salt;
             }
         });
     
-        console.log("✅ Transaction Logged Successfully!");
+        const user = await strapi.entityService.findOne("api::public-user.public-user", parsedUserId);
+    if (!user || !user.email) {
+        console.error("🚨 Email not found for user:", parsedUserId);
+        return ctx.badRequest("User email not found");
+    }
+    const userEmail = user.email;
+
+    // ✅ Send Email
+    try {
     
-        return ctx.send({
-            status: "success",
-            message: "Payment processed successfully, wallet updated",
-            newBalance: verifyWallet.balance
-        });
+
+     await axios.post('http://localhost:1337/api/send-custom-email', {
+  to: userEmail,
+  subject: '💰 Payment Successful - Wallet Recharge',
+  text: `Dear ${user.name}, your payment of ₹${amount} was successful. Transaction ID: ${txnid}. Wallet balance: ₹${newBalance}.`,
+  html: `
+  <div style="font-family: 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: auto; padding: 30px; border: 1px solid #eee; border-radius: 10px; background-color: #f9f9f9;">
+    <div style="text-align: center;">
+      <h2 style="color: #4CAF50;">✅ Payment Successful</h2>
+      <p style="font-size: 16px; color: #444;">Hi <strong>${user.name}</strong>,</p>
+      <p style="font-size: 16px; color: #444;">We’ve received your payment of <strong>₹${amount}</strong>.</p>
+    </div>
+
+    <div style="margin-top: 30px;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
+        <tr>
+          <td style="padding: 10px; border-bottom: 1px solid #ddd;">Transaction ID</td>
+          <td style="padding: 10px; border-bottom: 1px solid #ddd;"><strong>${txnid}</strong></td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border-bottom: 1px solid #ddd;">Amount</td>
+          <td style="padding: 10px; border-bottom: 1px solid #ddd;">₹${amount}</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border-bottom: 1px solid #ddd;">Updated Wallet Balance</td>
+          <td style="padding: 10px; border-bottom: 1px solid #ddd;">₹${newBalance}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="margin-top: 40px; text-align: center;">
+      <p style="font-size: 14px; color: #888;">Thank you for using our service!</p>
+      <p style="font-size: 14px; color: #888;">If you have any questions, feel free to reply to this email.</p>
+    </div>
+
+    <div style="margin-top: 20px; text-align: center; font-size: 12px; color: #aaa;">
+      © ${new Date().getFullYear()} CE Calling. All rights reserved.
+    </div>
+  </div>
+`,
+});
+
+    
+      console.log("✅ Payment email sent to:", userEmail);
+    } catch (err) {
+      console.error("❌ Failed to send payment email:", err);
+    }
+   
+
+    return ctx.send({
+      status: "success",
+      message: "Payment processed successfully, wallet updated",
+      newBalance: verifyWallet.balance
+  });
+
+
+
+
+
+
+
     } else {
         console.log("❌ Payment failed!");
     
