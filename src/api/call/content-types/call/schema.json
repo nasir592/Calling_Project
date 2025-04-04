@@ -51,12 +51,6 @@
       "relation": "manyToOne",
       "target": "api::public-user.public-user",
       "inversedBy": "calls"
-    },
-    "receiver": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::public-user.public-user",
-      "inversedBy": "calls"
     }
   }
 }

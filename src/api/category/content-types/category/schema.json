@@ -11,14 +11,14 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "user": {
+    "name": {
+      "type": "string"
+    },
+    "expert": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::expert-profile.expert-profile",
       "inversedBy": "categories"
-    },
-    "name": {
-      "type": "string"
     }
   }
 }

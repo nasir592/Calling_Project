@@ -41,8 +41,8 @@ export interface SharedRating extends Struct.ComponentSchema {
     displayName: 'RatingSummary';
   };
   attributes: {
-    average: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
-    count: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    average: Schema.Attribute.Float & Schema.Attribute.DefaultTo<0>;
+    count: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
   };
 }
 

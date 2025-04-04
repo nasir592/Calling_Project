@@ -17,8 +17,7 @@
     "transactions": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::transaction.transaction",
-      "mappedBy": "wallet"
+      "target": "api::transaction.transaction"
     },
     "isActive": {
       "type": "boolean",
@@ -27,8 +26,7 @@
     "user": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::public-user.public-user",
-       "inversedBy": "wallet"
+      "target": "api::public-user.public-user"
     }
   }
 }

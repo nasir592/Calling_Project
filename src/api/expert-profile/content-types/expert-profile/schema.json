@@ -8,15 +8,12 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "attributes": {
     "specialization": {
       "type": "string",
       "required": true
-    },
-    "experience": {
-      "type": "integer"
     },
     "descriptions": {
       "type": "text",
@@ -25,12 +22,6 @@
     "totalMins": {
       "type": "biginteger",
       "default": "0"
-    },
-    "categories": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::category.category",
-      "mappedBy": "user"
     },
     "languages": {
       "type": "text"
@@ -66,6 +57,20 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::review.review",
+      "mappedBy": "expert"
+    },
+    "averageRating": {
+      "type": "decimal"
+    
+    },
+    "reviewCount": {
+      "type": "integer"
+      
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::category.category",
       "mappedBy": "expert"
     }
   }

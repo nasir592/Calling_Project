@@ -7,11 +7,11 @@
   "options": {},
   "attributes": {
     "average": {
-      "type": "decimal",
+      "type": "float",
       "default": 0
     },
     "count": {
-      "type": "decimal",
+      "type": "integer",
       "default": 0
     }
   }

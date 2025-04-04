@@ -8,7 +8,7 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "attributes": {
     "rating": {
@@ -17,17 +17,16 @@
     "comments": {
       "type": "text"
     },
-    "user": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::public-user.public-user",
-      "inversedBy": "reviews"
-    },
     "expert": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::expert-profile.expert-profile",
       "inversedBy": "reviews"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::public-user.public-user"
     }
   }
 }

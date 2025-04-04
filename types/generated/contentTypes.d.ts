@@ -435,10 +435,6 @@ export interface ApiCallCall extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::call.call'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    receiver: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::public-user.public-user'
-    >;
     startTime: Schema.Attribute.DateTime & Schema.Attribute.Required;
     totalCost: Schema.Attribute.Decimal;
     type: Schema.Attribute.Enumeration<['videoCall', 'voiceCall']>;
@@ -463,6 +459,10 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    expert: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::expert-profile.expert-profile'
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -474,10 +474,6 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::expert-profile.expert-profile'
-    >;
   };
 }
 
@@ -491,9 +487,10 @@ export interface ApiExpertProfileExpertProfile
     singularName: 'expert-profile';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
+    averageRating: Schema.Attribute.Decimal;
     categories: Schema.Attribute.Relation<
       'oneToMany',
       'api::category.category'
@@ -505,7 +502,6 @@ export interface ApiExpertProfileExpertProfile
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 120;
       }>;
-    experience: Schema.Attribute.Integer;
     handler: Schema.Attribute.String & Schema.Attribute.Unique;
     languages: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -517,6 +513,7 @@ export interface ApiExpertProfileExpertProfile
     publishedAt: Schema.Attribute.DateTime;
     rates: Schema.Attribute.Component<'rate.rates', false>;
     ratings: Schema.Attribute.Component<'shared.rating', false>;
+    reviewCount: Schema.Attribute.Integer;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
     schedule: Schema.Attribute.Component<'schedule.availability', true>;
     specialization: Schema.Attribute.String & Schema.Attribute.Required;
@@ -616,8 +613,8 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
     profilePic: Schema.Attribute.Media<'images' | 'files', true>;
     publishedAt: Schema.Attribute.DateTime;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
-    role: Schema.Attribute.Enumeration<['Client', 'Expert']> &
-      Schema.Attribute.DefaultTo<'Client'>;
+    role: Schema.Attribute.Enumeration<['General', 'Expert']> &
+      Schema.Attribute.DefaultTo<'General'>;
     transactions: Schema.Attribute.Relation<
       'oneToMany',
       'api::transaction.transaction'
@@ -625,7 +622,6 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    wallet: Schema.Attribute.Relation<'oneToOne', 'api::wallet.wallet'>;
   };
 }
 
@@ -638,7 +634,7 @@ export interface ApiReviewReview extends Struct.CollectionTypeSchema {
     singularName: 'review';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     comments: Schema.Attribute.Text;
@@ -661,7 +657,7 @@ export interface ApiReviewReview extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     user: Schema.Attribute.Relation<
-      'manyToOne',
+      'oneToMany',
       'api::public-user.public-user'
     >;
   };
@@ -703,11 +699,6 @@ export interface ApiTransactionTransaction extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::public-user.public-user'
-    >;
-    wallet: Schema.Attribute.Relation<'manyToOne', 'api::wallet.wallet'>;
   };
 }
 
