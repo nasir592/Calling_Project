@@ -56,7 +56,7 @@ jobs:
             git stash
             git pull origin main
             rm -rf node_modules package-lock.json .cache build
-            npm install
+            npm install --legacy-peer-deps
             NODE_ENV=production NODE_OPTIONS='--max-old-space-size=4096' npm run build
             pm2 reload strapi --update-env
           EOF
