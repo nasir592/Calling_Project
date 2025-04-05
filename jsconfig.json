@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext"
-  }
+    "target": "es6",
+    "module": "commonjs",
+    "checkJs": false,
+    "typeRoots": ["./node_modules/@types"],
+    "types": []
+  },
+  "exclude": ["node_modules", "**/node_modules/*"]
 }

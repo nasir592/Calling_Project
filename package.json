@@ -40,5 +40,15 @@
   },
   "strapi": {
     "uuid": "10583876-598e-4a71-b215-68e05acada9d"
+  },
+  "devDependencies": {
+    "@types/follow-redirects": "^1.14.4",
+    "@types/formidable": "^3.4.5",
+    "@types/lodash": "^4.17.16",
+    "@types/mime": "^3.0.4",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.1",
+    "@types/react-transition-group": "^4.4.12"
   }
 }
