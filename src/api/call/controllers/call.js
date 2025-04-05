@@ -3,17 +3,23 @@
 const { createCoreController } = require("@strapi/strapi").factories;
 const Agora = require("agora-access-token");
 const axios = require("axios"); // For Firebase notifications
+const firebase = require("../../../utils/firebase/firebase-admin")
 
 module.exports = createCoreController("api::call.call", ({ strapi }) => ({
   async generateCallToken(ctx) {
     try {
-      const { uid, role, callerId, receiverId, type } = ctx.request.body;
+      const {  role, callerId, receiverId, type } = ctx.request.body;
 
-      const settings = await strapi.entityService.findOne("api::app-config.app-config", 1);
+    
+      
+      const settings = await strapi.entityService.findMany("api::app-config.app-config", 1);
 
-      if (!settings || !settings.Agora_App_Id || !settings.Agora_App_Certificate || !settings.Firebase_Server_Key) {
+    
+      
+      if (!settings || !settings.Agora_App_Id || !settings.Agora_App_Certificate) {
         return ctx.badRequest({ message: "Missing configuration settings." });
       }
+      
 
       const appId = settings.Agora_App_Id;
       const appCertificate = settings.Agora_App_Certificate;
@@ -28,16 +34,27 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
         return ctx.badRequest("Caller and receiver cannot be the same.");
       }
 
+      
+
       const caller = await strapi.entityService.findOne("api::public-user.public-user", callerId);
-      const receiver = await strapi.entityService.findOne("api::public-user.public-user", receiverId);
+
+
+
+      const receiver = await strapi.entityService.findOne("api::expert-profile.expert-profile", receiverId, {
+        fields: ['firebaseTokens']
+      });
+      
+
+      console.log("receiver", receiver);
+      
 
       if (!caller || !receiver) {
         return ctx.notFound("Caller or Receiver not found.");
       }
 
-      if (!receiver.firebaseToken) {
-        return ctx.badRequest("Receiver has no Firebase token.");
-      }
+      // if (!receiver.firebaseToken) {
+      //   return ctx.badRequest("Receiver has no Firebase token.");
+      // }
 
       const channelName = `call_${callerId}_${receiverId}_${Date.now()}`;
 
@@ -45,10 +62,10 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
         appId,
         appCertificate,
         channelName,
-        uid,
         role,
         expirationTime
       );
+    
 
       const call = await strapi.entityService.create("api::call.call", {
         data: {
@@ -61,31 +78,30 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
         },
       });
 
-      // Send Firebase Notification
-      const notificationData = {
-        to: receiver.firebaseToken,
+    
+      
+      const payload = {
         notification: {
           title: "Incoming Call",
-          body: `${caller.name} is calling you...`, // 🛠 Fixed Syntax
-          sound: "default",
+          body: `${caller.name} is calling you...`,
+          //sound: "default",
         },
         data: {
           type: "videoCall",
           channelName,
           token,
-          callerId,
-          receiverId,
+          callerId: callerId.toString(),
+          receiverId: receiverId.toString(),
         },
+        token: receiver.firebaseTokens,
       };
+      console.log("payload", payload);
+      
 
-      await axios.post("https://fcm.googleapis.com/fcm/send", notificationData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `key=${firebaseKey}`,
-        },
-      });
+      await firebase.messaging().send(payload);
 
-      return ctx.send({ token, channelName, uid, call });
+
+      return ctx.send({ token, channelName, call });
     } catch (error) {
       console.error("Error generating call token:", error);
       return ctx.internalServerError("Failed to generate call token.");

@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
+    "allowJs": true,
     "checkJs": false,
     "typeRoots": ["./node_modules/@types"],
-    "types": []
+    "types": []  // disables auto-including all @types
   },
-  "exclude": ["node_modules", "**/node_modules/*"]
+  "exclude": ["node_modules"]
 }

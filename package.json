@@ -23,6 +23,7 @@
     "agora-access-token": "^2.0.4",
     "axios": "^1.8.4",
     "crypto": "^1.0.1",
+    "firebase-admin": "^13.2.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.10.0",
     "pg": "8.8.0",

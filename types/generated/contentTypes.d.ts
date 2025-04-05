@@ -536,6 +536,7 @@ export interface ApiExpertProfileExpertProfile
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 120;
       }>;
+    firebaseTokens: Schema.Attribute.Text;
     handler: Schema.Attribute.String & Schema.Attribute.Unique;
     languages: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;

@@ -66,6 +66,9 @@
       "relation": "oneToMany",
       "target": "api::category.category",
       "mappedBy": "expert"
+    },
+    "firebaseTokens": {
+      "type": "text"
     }
   }
 }
