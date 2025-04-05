@@ -40,6 +40,9 @@
     },
     "Email": {
       "type": "email"
+    },
+    "EmailPass": {
+      "type": "text"
     }
   }
 }

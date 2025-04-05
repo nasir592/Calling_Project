@@ -7,21 +7,18 @@ const axios = require('axios');
 module.exports = {
   async initiatePayment(ctx) {
 
-
-    console.log(ctx.request.body);
+    
     const settings = await strapi.entityService.findMany("api::app-config.app-config", { limit: 1 });
-    console.log("Settings:", settings);
     
 
-if (!settings || !settings.Payment_MerchantKey || !settings.Payment_Salt) {
+     if (!settings || !settings.Payment_MerchantKey || !settings.Payment_Salt) {
     return ctx.badRequest({ message: "Missing configuration settings likes Key." });
-}
+        }
 
-const merchantKey = settings.Payment_MerchantKey;
-const salt = settings.Payment_Salt;
+        const merchantKey = settings.Payment_MerchantKey;
+        const salt = settings.Payment_Salt;
 
 
-console.log(ctx.request.body);
 
 
     try {
@@ -31,8 +28,6 @@ console.log(ctx.request.body);
         return ctx.badRequest("Missing required fields");
       }
 
-      console.log(ctx.request.body);
-      
 
       const txnId = `TXN${userId}_${Date.now()}`;;
       const productInfo = "Wallet Recharge";
@@ -69,7 +64,7 @@ console.log(ctx.request.body);
 
     const settings = await strapi.entityService.findMany("api::app-config.app-config", 1);
 
-    console.log(settings);
+    
     
     if (!settings || !settings.Payment_MerchantKey || !settings.Payment_Salt) {
     return ctx.badRequest({ message: "Missing configuration settings likes Key." });
@@ -90,6 +85,7 @@ console.log(ctx.request.body);
         email,
         additionalCharges,
         productinfo = "Wallet Recharge",
+        templateId,
       
       } = ctx.request.body;
   
@@ -191,7 +187,7 @@ console.log(ctx.request.body);
     
         // 🔍 **Verification Step: Fetch Wallet Again to Ensure Update**
         const verifyWallet = await strapi.entityService.findOne("api::wallet.wallet", walletId);
-        console.log("🔄 Verified Wallet Balance:", verifyWallet.balance);
+    
     
         if (verifyWallet.balance !== newBalance) {
             console.error("🚨 Wallet Balance Mismatch! Expected:", newBalance, "Got:", verifyWallet.balance);
@@ -219,50 +215,36 @@ console.log(ctx.request.body);
 
     // ✅ Send Email
     try {
+
+      const type = "Payment";
+
+        const templates = await strapi.entityService.findMany('api::email-template.email-template', {
+            filters: { type },
+           limit: 1
+           });
+
+       if (!templates || templates.length === 0) {
+         return ctx.throw(404, 'Email template not found');
+          }
+
+         const template = templates[0]; // Get the first template
+
+// Now you can access: template.officialEmail, template.subject, template.body
+
     
 
-     await axios.post('http://localhost:1337/api/send-custom-email', {
+    await axios.post('http://localhost:1337/api/send-custom-email', {
   to: userEmail,
-  subject: '💰 Payment Successful - Wallet Recharge',
-  text: `Dear ${user.name}, your payment of ₹${amount} was successful. Transaction ID: ${txnid}. Wallet balance: ₹${newBalance}.`,
-  html: `
-  <div style="font-family: 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: auto; padding: 30px; border: 1px solid #eee; border-radius: 10px; background-color: #f9f9f9;">
-    <div style="text-align: center;">
-      <h2 style="color: #4CAF50;">✅ Payment Successful</h2>
-      <p style="font-size: 16px; color: #444;">Hi <strong>${user.name}</strong>,</p>
-      <p style="font-size: 16px; color: #444;">We’ve received your payment of <strong>₹${amount}</strong>.</p>
-    </div>
-
-    <div style="margin-top: 30px;">
-      <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
-        <tr>
-          <td style="padding: 10px; border-bottom: 1px solid #ddd;">Transaction ID</td>
-          <td style="padding: 10px; border-bottom: 1px solid #ddd;"><strong>${txnid}</strong></td>
-        </tr>
-        <tr>
-          <td style="padding: 10px; border-bottom: 1px solid #ddd;">Amount</td>
-          <td style="padding: 10px; border-bottom: 1px solid #ddd;">₹${amount}</td>
-        </tr>
-        <tr>
-          <td style="padding: 10px; border-bottom: 1px solid #ddd;">Updated Wallet Balance</td>
-          <td style="padding: 10px; border-bottom: 1px solid #ddd;">₹${newBalance}</td>
-        </tr>
-      </table>
-    </div>
-
-    <div style="margin-top: 40px; text-align: center;">
-      <p style="font-size: 14px; color: #888;">Thank you for using our service!</p>
-      <p style="font-size: 14px; color: #888;">If you have any questions, feel free to reply to this email.</p>
-    </div>
-
-    <div style="margin-top: 20px; text-align: center; font-size: 12px; color: #aaa;">
-      © ${new Date().getFullYear()} CE Calling. All rights reserved.
-    </div>
-  </div>
-`,
+  subject: template.subject,
+  html: template.body ,
+  data: {
+    user,
+    amount,
+    txnid,
+    newBalance,
+  }
 });
 
-    
       console.log("✅ Payment email sent to:", userEmail);
     } catch (err) {
       console.error("❌ Failed to send payment email:", err);
