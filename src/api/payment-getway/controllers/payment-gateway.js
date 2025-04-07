@@ -32,8 +32,10 @@ module.exports = {
       const txnId = `TXN${userId}_${Date.now()}`;;
       const productInfo = "Wallet Recharge";
       const firstName = "User";
-      const surl = "http://localhost:1337/api/payu/success";
-      const furl = "http://localhost:1337/api/payu/failure";
+      // const surl = "http://localhost:1337/api/payu/success";
+      // const furl = "http://localhost:1337/api/payu/failure";
+      const surl = "https://manage.consultease.com/api/payu/success";
+      const furl = "https://manage.consultease.com/api/payu/failure";
 
       // ✅ Correct Hash String
       const hashString = `${merchantKey}|${txnId}|${amount}|${productInfo}|${firstName}|${email || ""}|||||||||||${salt}`;
@@ -233,7 +235,7 @@ module.exports = {
 
     
 
-    await axios.post('http://localhost:1337/api/send-custom-email', {
+    await axios.post('https://manage.consultease.com/api/send-custom-email', {
   to: userEmail,
   subject: template.subject,
   html: template.body ,
