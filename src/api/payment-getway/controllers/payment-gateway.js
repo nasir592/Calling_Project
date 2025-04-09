@@ -59,7 +59,7 @@ module.exports = {
       return ctx.send({ status: "error", message: error.message });
     }
   },
-
+   
   async handlePaymentResponse(ctx) {
 
    
@@ -261,10 +261,6 @@ module.exports = {
 
 
 
-
-
-
-
     } else {
         console.log("❌ Payment failed!");
     
@@ -275,8 +271,6 @@ module.exports = {
     }
     
     
-    
-  
     } catch (error) {
       return ctx.send({ status: "error", message: error.message });
     }

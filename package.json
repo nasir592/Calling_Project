@@ -19,6 +19,7 @@
     "@strapi/icons": "2.0.0-rc.18",
     "@strapi/plugin-cloud": "5.11.3",
     "@strapi/plugin-users-permissions": "5.11.3",
+    "@strapi/provider-upload-aws-s3": "^5.12.3",
     "@strapi/strapi": "5.11.3",
     "agora-access-token": "^2.0.4",
     "axios": "^1.8.4",

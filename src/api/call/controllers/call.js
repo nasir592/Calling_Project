@@ -141,7 +141,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
       // Fetch per-minute rate (assuming stored in receiver profile)
       const perMinuteRate = receiver.callRate || 10; // Default rate is 10 per minute
 
-      // Calculate total cost
+      
       const totalCost = duration * perMinuteRate;
 
       if (caller.walletBalance < totalCost) {

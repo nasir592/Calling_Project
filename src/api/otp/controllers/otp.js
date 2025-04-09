@@ -13,12 +13,14 @@ module.exports = createCoreController("api::otp.otp", ({ strapi }) => ({
 
 try {
     
-    const settings = await strapi.entityService.findOne("api::app-config.app-config", 1);
+
+    
+    const settings = await strapi.entityService.findMany("api::app-config.app-config", 1);
 
 if (!settings || !settings.Template_Id || !settings.Msg_Auth_Key) {
     return ctx.badRequest({ message: "Missing configuration settings." });
 }
-console.log(settings);
+
 
 
     const templateId = settings.Template_Id;
@@ -27,9 +29,11 @@ console.log(settings);
     const { mobile } = ctx.request.body;
     if (!mobile) return ctx.badRequest({ message: "Mobile number is required" });
 
-    const otp = Math.floor(100000 + Math.random() * 900000); 
+   const otp = Math.floor(1000 + Math.random() * 9000);
+
     const expiresAt = new Date(Date.now() + 10 * 60000); 
 
+    
     // ✅ Delete old OTP if exists
     await strapi.query("api::otp.otp").delete({ where: { mobile } });
 
