@@ -1,26 +1,25 @@
-export default ({ env }) => ({
-    upload: {
-      config: {
-        provider: 'aws-s3',
-        providerOptions: {
-          s3Options: {
-            credentials: {
-              accessKeyId: env('AWS_ACCESS_KEY_ID'),
-              secretAccessKey: env('AWS_ACCESS_SECRET'),
-            },
-            region: env('AWS_REGION'),
-            params: {
-              Bucket: env('AWS_BUCKET'),
-            },
+module.exports = ({ env }) => ({
+  upload: {
+    config: {
+      provider: 'aws-s3',
+      providerOptions: {
+        s3Options: {
+          credentials: {
+            accessKeyId: env('AWS_ACCESS_KEY_ID'),
+            secretAccessKey: env('AWS_ACCESS_SECRET'),
           },
-          // Add these key configurations:
-          basePath: 'avatars', // Ensures all uploads go to avatars folder
-          rootPath: 'avatars', // Optional: Additional subfolder structure
+          region: env('AWS_REGION'),
+          params: {
+            Bucket: env('AWS_BUCKET'),
+          },
         },
-        actionOptions: {
-          upload: { ACL: 'public-read' },
-          uploadStream: { ACL: 'public-read' },
-        },
+        basePath: 'avatars',
+        rootPath: 'avatars',
+      },
+      actionOptions: {
+        upload: { ACL: 'public-read' },
+        uploadStream: { ACL: 'public-read' },
       },
     },
-  });
+  },
+});
