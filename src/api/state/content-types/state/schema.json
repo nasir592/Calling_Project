@@ -1,0 +1,17 @@
+{
+  "kind": "collectionType",
+  "collectionName": "states",
+  "info": {
+    "singularName": "state",
+    "pluralName": "states",
+    "displayName": "State"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "stateNames": {
+      "type": "text"
+    }
+  }
+}

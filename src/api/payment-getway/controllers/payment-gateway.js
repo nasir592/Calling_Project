@@ -274,8 +274,132 @@ module.exports = {
     } catch (error) {
       return ctx.send({ status: "error", message: error.message });
     }
-  }
+  },
   
+  async withdrawToBank(ctx) {
+    try {
+      const { userId, amount } = ctx.request.body;
+      if (!userId || !amount) return ctx.badRequest("Missing required fields");
 
- 
+      const parsedAmount = parseFloat(amount);
+      if (isNaN(parsedAmount)) return ctx.badRequest("Invalid amount");
+      
+      if (parsedAmount <= 0) return ctx.badRequest("Minimum withdrawal amount is $1");
+
+      // 1️⃣ Get user & bank details
+      const user = await strapi.entityService.findOne("api::public-user.public-user", userId, {
+        populate: { expert_profile: true },
+      });
+
+      if (!user || !user.expert_profile) return ctx.badRequest("Expert not found");
+
+      const profile = user.expert_profile;
+      const { accountNumber, ifscCode, accountHolderName } = profile;
+
+      if (!accountNumber || !ifscCode || !accountHolderName) {
+        return ctx.badRequest("Bank details incomplete");
+      }
+
+      // 2️⃣ Fetch wallet
+      const wallets = await strapi.entityService.findMany("api::wallet.wallet", {
+        filters: { user: userId },
+        populate: true,
+      });
+
+      if (!wallets || wallets.length === 0) return ctx.badRequest("Wallet not found");
+
+      const wallet = wallets[0];
+      if (wallet.balance < parsedAmount) return ctx.badRequest("Insufficient balance");
+
+      // 3️⃣ Deduct amount immediately (prevent multiple withdrawals)
+      const newBalance = (wallet.balance - parsedAmount).toFixed(2);
+      await strapi.entityService.update("api::wallet.wallet", wallet.id, {
+        data: { balance: newBalance },
+      });
+
+      // 4️⃣ Get PayU access token
+      const accessToken = await getPayUAccessToken();
+
+      // 5️⃣ Initiate payout
+      const merchantRefId = `WITHDRAW_${userId}_${Date.now()}`;
+
+
+      const payoutResponse = await initiatePayUPayout({
+        amount: parsedAmount,
+        accountNumber,
+        ifsc: ifscCode,
+        name: accountHolderName,
+        referenceId: merchantRefId,
+        token: accessToken,
+      });
+
+      // 6️⃣ Log withdrawal request
+      await strapi.entityService.create("api::withdrawal-request.withdrawal-request", {
+        data: {
+          user: userId,
+          amount: parsedAmount,
+          bankDetails: {
+            accountHolderName,
+            accountNumber,
+            ifscCode,
+          },
+          status: "completed",
+          remarks: `PayU Ref: ${payoutResponse?.data?.merchant_ref_id || "N/A"}`,
+        },
+      });
+
+      // 7️⃣ Transaction log
+      await strapi.entityService.create("api::transaction.transaction", {
+        data: {
+          wallet: wallet.id,
+          user: userId,
+          order_Id: merchantRefId,
+          amount: parsedAmount,
+          transactionType: "debit",
+          paymentStatus: "completed",
+          method: "bankTransfer",
+        },
+      });
+
+      return ctx.send({
+        status: "success",
+        message: "Withdrawal initiated successfully",
+        payoutResponse,
+        newBalance,
+      });
+
+    } catch (error) {
+      console.error("❌ Withdrawal Failed:", error);
+      return ctx.send({ status: "error", message: error.message });
+    }
+  },
+
+  async initiatePayUPayout({ amount, accountNumber, ifsc, name, referenceId, token }) {
+    try {
+      const response = await axios.post(
+        "https://uat-payout.payu.in/payout/v1/account/transfer",
+        {
+          account_number: accountNumber,
+          ifsc: ifsc,
+          amount: parseFloat(amount),
+          merchant_ref_id: referenceId,
+          narrative: "Expert Wallet Withdrawal",
+          payee_name: name
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+        }
+      );
+  
+      return response.data;
+    } catch (error) {
+      console.error("❌ PayU payout error:", error.response?.data || error.message);
+      throw error;
+    }
+  },
 };
+
+  

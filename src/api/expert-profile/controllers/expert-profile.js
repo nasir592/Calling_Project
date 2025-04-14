@@ -12,18 +12,38 @@ module.exports = createCoreController('api::expert-profile.expert-profile', ({ s
 
     const keyword = q.trim();
 
-    const results = await strapi.entityService.findMany('api::expert-profile.expert-profile', {
+    // First, search by category
+    const categoryResults = await strapi.entityService.findMany('api::expert-profile.expert-profile', {
       filters: {
-        $or: [
-          { handler: { $containsi: keyword } },
-          { specialization: { $containsi: keyword } },
-          { user: { name: { $containsi: keyword } } },
-          { categories: { name: { $containsi: keyword } } },
-        ],
+        categories: { name: { $containsi: keyword } },
       },
-      populate: ['user', 'categories'], // populate relations
+      populate: ['user', 'categories'],
     });
 
-    return results;
+    // If no results found in category, search by handler
+    if (categoryResults.length === 0) {
+      const handlerResults = await strapi.entityService.findMany('api::expert-profile.expert-profile', {
+        filters: {
+          handler: { $containsi: keyword },
+        },
+        populate: ['user', 'categories'],
+      });
+
+      // If no results found in handler, search by name
+      if (handlerResults.length === 0) {
+        const nameResults = await strapi.entityService.findMany('api::expert-profile.expert-profile', {
+          filters: {
+            user: { name: { $containsi: keyword } },
+          },
+          populate: ['user', 'categories'],
+        });
+
+        return nameResults;
+      }
+
+      return handlerResults;
+    }
+
+    return categoryResults;
   }
 }));

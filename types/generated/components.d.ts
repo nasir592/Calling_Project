@@ -1,5 +1,16 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface ExpertDurationDuration extends Struct.ComponentSchema {
+  collectionName: 'components_expert_duration_durations';
+  info: {
+    displayName: 'Duration';
+  };
+  attributes: {
+    TotalCalls: Schema.Attribute.BigInteger;
+    TotalMin: Schema.Attribute.Decimal;
+  };
+}
+
 export interface RateRates extends Struct.ComponentSchema {
   collectionName: 'components_rate_rates';
   info: {
@@ -49,6 +60,7 @@ export interface SharedRating extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'expert-duration.duration': ExpertDurationDuration;
       'rate.rates': RateRates;
       'schedule.availability': ScheduleAvailability;
       'shared.rating': SharedRating;

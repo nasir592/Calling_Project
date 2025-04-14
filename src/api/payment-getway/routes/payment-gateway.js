@@ -6,7 +6,8 @@ module.exports = {
       path: "/payu/initiate",
       handler: "payment-gateway.initiatePayment",
       config: {
-        auth: false, // Change to true if authentication is required
+        auth: false, // Change to `true` if authentication is required
+        policies: ['global::IsAuth'],
       },
     },
     {
@@ -14,7 +15,8 @@ module.exports = {
       path: "/payu/success",
       handler: "payment-gateway.handlePaymentResponse",
       config: {
-        auth: false,
+        auth: false, // Change to `true` if authentication is required
+        policies: ['global::IsAuth'],
       },
     },
     {
@@ -22,7 +24,17 @@ module.exports = {
       path: "/payu/failure",
       handler: "payment-gateway.handlePaymentResponse",
       config: {
-        auth: false,
+        auth: false, // Change to `true` if authentication is required
+        policies: ['global::IsAuth'],
+      },
+    },
+    {
+      method: "POST",
+      path: "/payu/withdraw",
+      handler: "payment-gateway.withdrawToBank",
+      config: {
+        auth: false, // Change to `true` if authentication is required
+        policies: ['global::IsAuth'],
       },
     },
   ],

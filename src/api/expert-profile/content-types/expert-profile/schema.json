@@ -11,17 +11,9 @@
     "draftAndPublish": false
   },
   "attributes": {
-    "specialization": {
-      "type": "string",
-      "required": true
-    },
     "descriptions": {
       "type": "text",
       "maxLength": 120
-    },
-    "totalMins": {
-      "type": "biginteger",
-      "default": "0"
     },
     "languages": {
       "type": "text"
@@ -69,6 +61,21 @@
     },
     "firebaseTokens": {
       "type": "text"
+    },
+    "location": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::location.location"
+    },
+    "durations": {
+      "type": "component",
+      "repeatable": true,
+      "component": "expert-duration.duration"
+    },
+    "language": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::language.language"
     }
   }
 }

@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_expert_duration_durations",
+  "info": {
+    "displayName": "Duration"
+  },
+  "options": {},
+  "attributes": {
+    "TotalMin": {
+      "type": "decimal"
+    },
+    "TotalCalls": {
+      "type": "biginteger"
+    }
+  }
+}
