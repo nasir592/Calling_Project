@@ -405,6 +405,8 @@ export interface ApiAppConfigAppConfig extends Struct.SingleTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    videoCall_Commission: Schema.Attribute.Integer;
+    voiceCall_Commission: Schema.Attribute.Integer;
   };
 }
 
@@ -565,6 +567,7 @@ export interface ApiExpertProfileExpertProfile
     durations: Schema.Attribute.Component<'expert-duration.duration', true>;
     firebaseTokens: Schema.Attribute.Text;
     handler: Schema.Attribute.String & Schema.Attribute.Unique;
+    isVerified: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     language: Schema.Attribute.Relation<'oneToMany', 'api::language.language'>;
     languages: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;

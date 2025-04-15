@@ -43,6 +43,12 @@
     },
     "EmailPass": {
       "type": "text"
+    },
+    "voiceCall_Commission": {
+      "type": "integer"
+    },
+    "videoCall_Commission": {
+      "type": "integer"
     }
   }
 }

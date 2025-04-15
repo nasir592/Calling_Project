@@ -76,6 +76,10 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::language.language"
+    },
+    "isVerified": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

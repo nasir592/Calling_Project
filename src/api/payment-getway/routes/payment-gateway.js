@@ -7,7 +7,7 @@ module.exports = {
       handler: "payment-gateway.initiatePayment",
       config: {
         auth: false, // Change to `true` if authentication is required
-        policies: ['global::IsAuth'],
+       
       },
     },
     {
@@ -16,7 +16,7 @@ module.exports = {
       handler: "payment-gateway.handlePaymentResponse",
       config: {
         auth: false, // Change to `true` if authentication is required
-        policies: ['global::IsAuth'],
+        
       },
     },
     {
@@ -25,7 +25,7 @@ module.exports = {
       handler: "payment-gateway.handlePaymentResponse",
       config: {
         auth: false, // Change to `true` if authentication is required
-        policies: ['global::IsAuth'],
+        
       },
     },
     {
@@ -34,7 +34,7 @@ module.exports = {
       handler: "payment-gateway.withdrawToBank",
       config: {
         auth: false, // Change to `true` if authentication is required
-        policies: ['global::IsAuth'],
+        
       },
     },
   ],
