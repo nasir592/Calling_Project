@@ -8,7 +8,7 @@ module.exports = {
       handler: "call.generateCallToken",
       config: {
         auth: false, // Change to `true` if authentication is required
-        policies: ['global::IsAuth'],
+       
       },
     },
     {
@@ -17,7 +17,7 @@ module.exports = {
       handler: "call.endCall",
       config: {
         auth: false, // Change to `true` if authentication is required
-        policies: ['global::IsAuth'],
+      
       },
     },
   ],

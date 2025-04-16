@@ -18,9 +18,6 @@ module.exports = {
         const merchantKey = settings.Payment_MerchantKey;
         const salt = settings.Payment_Salt;
 
-
-
-
     try {
 
       const { amount, userId, email, phone } = ctx.request.body;
