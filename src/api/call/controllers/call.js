@@ -40,8 +40,8 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
 
 
 
-      const receiver = await strapi.entityService.findOne("api::expert-profile.expert-profile", receiverId, {
-        fields: ['firebaseTokens']
+      const receiver = await strapi.entityService.findOne("api::public-user.public-user", receiverId, {
+    
       });
       
 

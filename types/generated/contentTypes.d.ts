@@ -565,7 +565,6 @@ export interface ApiExpertProfileExpertProfile
         maxLength: 120;
       }>;
     durations: Schema.Attribute.Component<'expert-duration.duration', true>;
-    firebaseTokens: Schema.Attribute.Text;
     handler: Schema.Attribute.String & Schema.Attribute.Unique;
     isVerified: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     language: Schema.Attribute.Relation<'oneToMany', 'api::language.language'>;
@@ -726,6 +725,7 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
       'oneToOne',
       'api::expert-profile.expert-profile'
     >;
+    firebaseTokens: Schema.Attribute.Text;
     isLive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<

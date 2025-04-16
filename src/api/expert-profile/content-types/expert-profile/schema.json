@@ -77,9 +77,6 @@
     "isVerified": {
       "type": "boolean",
       "default": false
-    },
-    "firebaseTokens": {
-      "type": "text"
     }
   }
 }
