@@ -41,7 +41,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
 
 
       const receiver = await strapi.entityService.findOne("api::public-user.public-user", receiverId, {
-    
+        fields: ['firebaseTokens']
       });
       
 
@@ -104,7 +104,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
       return ctx.send({ token, channelName, call });
     } catch (error) {
       console.error("Error generating call token:", error);
-      return ctx.internalServerError("Failed to generate call token.");
+      return ctx.internalServerError(error);
     }
   },
 
@@ -175,7 +175,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
       return ctx.send({ message: "Call ended successfully.", updatedCall });
     } catch (error) {
       console.error("Error ending call:", error);
-      return ctx.internalServerError("An error occurred while ending the call.");
+      return ctx.internalServerError(error);
     }
   },
 }));
