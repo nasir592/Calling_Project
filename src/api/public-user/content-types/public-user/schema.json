@@ -26,11 +26,11 @@
     },
     "profilePic": {
       "type": "media",
-      "multiple": true,
+      "multiple": false,
       "required": false,
       "allowedTypes": [
-        "images",
-        "files"
+        "images"
+      
       ]
     },
     "mobile": {
@@ -76,6 +76,12 @@
     },
     "firebaseTokens": {
       "type": "text"
+    },
+    "favorites": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::favorite.favorite",
+      "mappedBy": "users"
     }
   }
 }

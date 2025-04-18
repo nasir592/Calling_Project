@@ -589,6 +589,37 @@ export interface ApiExpertProfileExpertProfile
   };
 }
 
+export interface ApiFavoriteFavorite extends Struct.CollectionTypeSchema {
+  collectionName: 'favorites';
+  info: {
+    displayName: 'Favorite';
+    pluralName: 'favorites';
+    singularName: 'favorite';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::favorite.favorite'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::public-user.public-user'
+    >;
+  };
+}
+
 export interface ApiLanguageLanguage extends Struct.CollectionTypeSchema {
   collectionName: 'languages';
   info: {
@@ -725,6 +756,7 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
       'oneToOne',
       'api::expert-profile.expert-profile'
     >;
+    favorites: Schema.Attribute.Relation<'oneToMany', 'api::favorite.favorite'>;
     firebaseTokens: Schema.Attribute.Text;
     isLive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -735,7 +767,7 @@ export interface ApiPublicUserPublicUser extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     mobile: Schema.Attribute.BigInteger & Schema.Attribute.Unique;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    profilePic: Schema.Attribute.Media<'images' | 'files', true>;
+    profilePic: Schema.Attribute.Media<'images'>;
     publishedAt: Schema.Attribute.DateTime;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
     role: Schema.Attribute.Enumeration<['Client', 'Expert']> &
@@ -1408,6 +1440,7 @@ declare module '@strapi/strapi' {
       'api::city.city': ApiCityCity;
       'api::email-template.email-template': ApiEmailTemplateEmailTemplate;
       'api::expert-profile.expert-profile': ApiExpertProfileExpertProfile;
+      'api::favorite.favorite': ApiFavoriteFavorite;
       'api::language.language': ApiLanguageLanguage;
       'api::location.location': ApiLocationLocation;
       'api::otp.otp': ApiOtpOtp;

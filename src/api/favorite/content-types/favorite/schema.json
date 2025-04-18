@@ -1,0 +1,20 @@
+{
+  "kind": "collectionType",
+  "collectionName": "favorites",
+  "info": {
+    "singularName": "favorite",
+    "pluralName": "favorites",
+    "displayName": "Favorite"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "users": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::public-user.public-user",
+      "inversedBy": "favorites"
+    }
+  }
+}
