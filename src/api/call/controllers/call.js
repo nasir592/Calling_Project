@@ -80,7 +80,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
       });
   
       // Ensure receiver has valid Firebase tokens
-      if (!Array.isArray(receiver.firebaseTokens) || receiver.firebaseTokens.length === 0) {
+      if (receiver.firebaseTokens.length === 0) {
         return ctx.badRequest("Receiver has no valid Firebase tokens.");
       }
   
