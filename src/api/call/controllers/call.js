@@ -43,7 +43,7 @@ async generateCallToken(ctx) {
     }
 
     // Generate a unique channel name for the call
-    const channelName = "M_Chananel_Name";
+    const channelName = `call_${callerId}_${receiverId}_${Date.now()}`;
 
     // Generate the Agora token for the caller (broadcaster role)
     
