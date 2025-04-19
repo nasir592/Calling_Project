@@ -80,7 +80,7 @@
       "mappedBy": "users"
     },
     "firebaseTokens": {
-      "type": "json"
+      "type": "text"
     }
   }
 }
