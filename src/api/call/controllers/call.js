@@ -3,13 +3,14 @@
 const { createCoreController } = require("@strapi/strapi").factories;
 const Agora = require("agora-access-token");
 const axios = require("axios"); // For Firebase notifications
-const firebase = require("../../../utils/firebase/firebase-admin")
+const admin = require("../../../utils/firebase/firebase-admin")
 
 module.exports = createCoreController("api::call.call", ({ strapi }) => ({
   async generateCallToken(ctx) {
     try {
       const { role, callerId, receiverId, type } = ctx.request.body;
   
+      // Fetch configuration settings
       const settings = await strapi.entityService.findMany("api::app-config.app-config", 1);
   
       if (!settings || !settings.Agora_App_Id || !settings.Agora_App_Certificate) {
@@ -18,9 +19,9 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
   
       const appId = settings.Agora_App_Id;
       const appCertificate = settings.Agora_App_Certificate;
-      const firebaseKey = "AIzaSyAEPCBqd9HY5ltEqem3L_3aQ_EuMHN1UGY"; // Ensure this is correctly stored, not hardcoded
-      const expirationTime = Math.floor(Date.now() / 1000) + 3600;
+      const expirationTime = Math.floor(Date.now() / 1000) + 3600; // Token expiration (1 hour)
   
+      // Validate request body
       if (!callerId || !receiverId || !type) {
         return ctx.badRequest("Missing required parameters.");
       }
@@ -29,6 +30,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
         return ctx.badRequest("Caller and receiver cannot be the same.");
       }
   
+      // Fetch caller and receiver data
       const caller = await strapi.entityService.findOne("api::public-user.public-user", callerId);
       const receiver = await strapi.entityService.findOne("api::public-user.public-user", receiverId, {
         fields: ['firebaseTokens'],
@@ -38,8 +40,10 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
         return ctx.notFound("Caller or Receiver not found.");
       }
   
+      // Generate a unique channel name for the call
       const channelName = `call_${callerId}_${receiverId}_${Date.now()}`;
   
+      // Generate the Agora token for the caller
       const token = Agora.RtcTokenBuilder.buildTokenWithUid(
         appId,
         appCertificate,
@@ -48,6 +52,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
         expirationTime
       );
   
+      // Create a new call record
       const call = await strapi.entityService.create("api::call.call", {
         data: {
           channelName,
@@ -59,42 +64,46 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
         },
       });
   
-      // Ensure receiver.firebaseTokens is an array
-      if (!Array.isArray(receiver.firebaseTokens) || receiver.firebaseTokens.length === 0) {
-        return ctx.badRequest("Receiver has no valid Firebase tokens.");
+      // Ensure receiver has valid Firebase tokens
+      if (!receiver.firebaseTokens || receiver.firebaseTokens.length === 0) {
+        return ctx.badRequest("Receiver has no valid Firebase token.");
       }
   
+  
+      // Prepare the Firebase notification payload
       const payload = {
         notification: {
           title: "Incoming Call",
           body: `${caller.name} is calling you...`,
-          type: type, // Dynamically set based on call type (voiceCall/videoCall)
-          channelName,
-          token,
-          callerId: callerId.toString(),
-          receiverId: receiverId.toString(),
         },
+        // Use 'data' for custom information
         data: {
-          type: type, // Dynamically set based on call type (voiceCall/videoCall)
+          type: type, // 'voiceCall' or 'videoCall'
           channelName,
           token,
           callerId: callerId.toString(),
           receiverId: receiverId.toString(),
         },
-        tokens: receiver.firebaseTokens, // Send notification to all tokens associated with the receiver
+        // Send the token to the receiver's device
+        token: receiver.firebaseTokens, // Send notification to the receiver's token
       };
   
       console.log("Sending Firebase payload:", payload);
   
-      // Sending notification to all tokens
-      await firebase.messaging().sendMulticast(payload);
+      // Send notification to all tokens using Firebase Admin SDK
+      const response = await admin.messaging().send(payload);
   
+      // Log the response for debugging
+      console.log("Notification sent successfully:", response);
+  
+      // Return the response to the frontend
       return ctx.send({ token, channelName, call });
     } catch (error) {
       console.error("Error generating call token:", error);
       return ctx.internalServerError(error);
     }
   },
+
   
 
   async endCall(ctx) {
