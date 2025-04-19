@@ -11,7 +11,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
       const { role, callerId, receiverId, type } = ctx.request.body;
   
       // Fetch configuration settings
-      const settings = await strapi.entityService.findMany("api::app-config.app-config", 1);
+      const settings = await strapi.entityService.findMany("api::app-config.app-config", 1)
   
       if (!settings || !settings.Agora_App_Id || !settings.Agora_App_Certificate) {
         return ctx.badRequest({ message: "Missing configuration settings." });
@@ -19,8 +19,8 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
   
       const appId = settings.Agora_App_Id;
       const appCertificate = settings.Agora_App_Certificate;
-      const firebaseKey = process.env.FIREBASE_KEY; // Secure Firebase key
-      const expirationTime = Math.floor(Date.now() / 1000) + 3600; // Token expiration (1 hour)
+      const firebaseKey = process.env.FIREBASE_KEY; // Secure Firebase key from .env
+      const expirationTime = Math.floor(Date.now() / 1000) + 3600; // Token expiration (1 hour))
   
       // Validate request body
       if (!callerId || !receiverId || !type) {
@@ -28,7 +28,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
       }
   
       if (callerId === receiverId) {
-        return ctx.badRequest("Caller and receiver cannot be the same.");
+        return ctx.badRequest("Caller and receiver cannot be the same.")
       }
   
       // Fetch caller and receiver data
@@ -100,7 +100,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
       // Send notification to all tokens
       await firebase.messaging().sendMulticast(payload);
   
-      // Return the response to the frontend
+      // Return the response to the frontends
       return ctx.send({ token, channelName, call });
     } catch (error) {
       console.error("Error generating call token:", error);
@@ -109,7 +109,6 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
   },
   
   
-
   async endCall(ctx) {
     try {
       const { callId } = ctx.request.body;
