@@ -44,15 +44,21 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
     // Generate a unique channel name for the call
     const channelName = `call_${callerId}_${receiverId}_${Date.now()}`;
 
-    // Generate the Agora token for the caller
+  
+
+    // Generate Agora token for the unique channel name and UID
     const token = Agora.RtcTokenBuilder.buildTokenWithUid(
       appId,
       appCertificate,
       channelName,
       role,
-      expirationTime
+      expirationTime,
+      callerId // Pass the unique UID here
     );
 
+
+    console.log(token);
+    
     // Create a new call record
     const call = await strapi.entityService.create("api::call.call", {
       data: {
