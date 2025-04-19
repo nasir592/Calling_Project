@@ -10,8 +10,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
     try {
       const { role, callerId, receiverId, type } = ctx.request.body;
   
-      // Fetch configuration settings
-      const settings = await strapi.entityService.findMany("api::app-config.app-config", 1)
+      const settings = await strapi.entityService.findMany("api::app-config.app-config", 1);
   
       if (!settings || !settings.Agora_App_Id || !settings.Agora_App_Certificate) {
         return ctx.badRequest({ message: "Missing configuration settings." });
@@ -19,36 +18,28 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
   
       const appId = settings.Agora_App_Id;
       const appCertificate = settings.Agora_App_Certificate;
-      const firebaseKey = process.env.FIREBASE_KEY; // Secure Firebase key from .env
-      const expirationTime = Math.floor(Date.now() / 1000) + 3600; // Token expiration (1 hour))
+      const firebaseKey = "AIzaSyAEPCBqd9HY5ltEqem3L_3aQ_EuMHN1UGY"; // Ensure this is correctly stored, not hardcoded
+      const expirationTime = Math.floor(Date.now() / 1000) + 3600;
   
-      // Validate request body
       if (!callerId || !receiverId || !type) {
         return ctx.badRequest("Missing required parameters.");
       }
   
       if (callerId === receiverId) {
-        return ctx.badRequest("Caller and receiver cannot be the same.")
+        return ctx.badRequest("Caller and receiver cannot be the same.");
       }
   
-      // Fetch caller and receiver data
       const caller = await strapi.entityService.findOne("api::public-user.public-user", callerId);
       const receiver = await strapi.entityService.findOne("api::public-user.public-user", receiverId, {
         fields: ['firebaseTokens'],
       });
   
-
-      console.log(receiver);
-      
-
       if (!caller || !receiver) {
         return ctx.notFound("Caller or Receiver not found.");
       }
   
-      // Generate a unique channel name for the call
       const channelName = `call_${callerId}_${receiverId}_${Date.now()}`;
   
-      // Generate the Agora token for the caller
       const token = Agora.RtcTokenBuilder.buildTokenWithUid(
         appId,
         appCertificate,
@@ -57,7 +48,6 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
         expirationTime
       );
   
-      // Create a new call record
       const call = await strapi.entityService.create("api::call.call", {
         data: {
           channelName,
@@ -69,24 +59,23 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
         },
       });
   
-      // Ensure receiver has valid Firebase tokens
+      // Ensure receiver.firebaseTokens is an array
       if (!Array.isArray(receiver.firebaseTokens) || receiver.firebaseTokens.length === 0) {
         return ctx.badRequest("Receiver has no valid Firebase tokens.");
       }
   
-      // Prepare the Firebase notification payload
       const payload = {
         notification: {
           title: "Incoming Call",
           body: `${caller.name} is calling you...`,
-          type: type, // 'voiceCall' or 'videoCall'
+          type: type, // Dynamically set based on call type (voiceCall/videoCall)
           channelName,
           token,
           callerId: callerId.toString(),
           receiverId: receiverId.toString(),
         },
         data: {
-          type: type, // 'voiceCall' or 'videoCall'
+          type: type, // Dynamically set based on call type (voiceCall/videoCall)
           channelName,
           token,
           callerId: callerId.toString(),
@@ -97,10 +86,9 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
   
       console.log("Sending Firebase payload:", payload);
   
-      // Send notification to all tokens
+      // Sending notification to all tokens
       await firebase.messaging().sendMulticast(payload);
   
-      // Return the response to the frontends
       return ctx.send({ token, channelName, call });
     } catch (error) {
       console.error("Error generating call token:", error);
@@ -108,7 +96,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
     }
   },
   
-  
+
   async endCall(ctx) {
     try {
       const { callId } = ctx.request.body;
