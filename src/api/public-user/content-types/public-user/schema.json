@@ -30,7 +30,6 @@
       "required": false,
       "allowedTypes": [
         "images"
-      
       ]
     },
     "mobile": {
@@ -74,14 +73,14 @@
       "type": "boolean",
       "default": false
     },
-    "firebaseTokens": {
-      "type": "text"
-    },
     "favorites": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::favorite.favorite",
       "mappedBy": "users"
+    },
+    "firebaseTokens": {
+      "type": "json"
     }
   }
 }
