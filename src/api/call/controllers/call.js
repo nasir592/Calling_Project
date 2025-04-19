@@ -7,7 +7,8 @@ const admin = require("../../../utils/firebase/firebase-admin")
 
 module.exports = createCoreController("api::call.call", ({ strapi }) => ({
 
-  async  generateCallToken(ctx) {
+ 
+async generateCallToken(ctx) {
   try {
     const { role, callerId, receiverId, type } = ctx.request.body;
 
@@ -44,21 +45,21 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
     // Generate a unique channel name for the call
     const channelName = `call_${callerId}_${receiverId}_${Date.now()}`;
 
-  
+    // Generate the Agora token for the caller (broadcaster role)
+    
 
-    // Generate Agora token for the unique channel name and UID
+    const tokenRole = Agora.RtcRole.PUBLISHER
     const token = Agora.RtcTokenBuilder.buildTokenWithUid(
       appId,
       appCertificate,
       channelName,
-      role,
+      tokenRole, // Make sure you're using the right role
       expirationTime,
-      callerId // Pass the unique UID here
+      callerId // Pass the callerId (or unique UID)
     );
 
+    console.log("Generated token:", token);
 
-    console.log(token);
-    
     // Create a new call record
     const call = await strapi.entityService.create("api::call.call", {
       data: {
@@ -82,7 +83,6 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
         title: "Incoming Call",
         body: `${caller.name} is calling you...`,
       },
-      // Use 'data' for custom information
       data: {
         type: type, // 'voiceCall' or 'videoCall'
         channelName,
@@ -90,7 +90,6 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
         callerId: callerId.toString(),
         receiverId: receiverId.toString(),
       },
-      // Send the token to the receiver's device
       token: receiver.firebaseTokens, // Send notification to the first token in the array
     };
 
