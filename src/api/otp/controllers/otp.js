@@ -78,6 +78,8 @@ if (!settings || !settings.Template_Id || !settings.Msg_Auth_Key) {
         return ctx.badRequest({ message: "No OTP found. Please request a new one." });
     }
 
+    console.log(otpRecord);
+    
     if (String(otpRecord.otp) !== String(otp)) {
         return ctx.badRequest({ message: "Invalid OTP" });
     }
@@ -100,9 +102,11 @@ if (!settings || !settings.Template_Id || !settings.Msg_Auth_Key) {
         });
     }
 
+    console.log("Successfully verified OTP");
+    
 
 
-    const settings = await strapi.entityService.findOne("api::app-config.app-config", 1);
+    const settings = await strapi.entityService.findMany("api::app-config.app-config", 1);
 
     if (!settings || !settings.Jwt_Secret_Key) {
         return ctx.badRequest({ message: "Missing configuration settings Jwt Secert Key." });
@@ -110,6 +114,7 @@ if (!settings || !settings.Template_Id || !settings.Msg_Auth_Key) {
     
         const jwtSecret = settings.Jwt_Secret_Key;
 
+console.log(jwtSecret);
 
 
     // Generate JWT Token
@@ -118,10 +123,12 @@ if (!settings || !settings.Template_Id || !settings.Msg_Auth_Key) {
         jwtSecret || strapi.config.get("plugin.users-permissions.jwtSecret"),
         { expiresIn: "7d" }
     );
+console.log(token);
 
     // Delete OTP after successful verification
     await strapi.db.query("api::otp.otp").delete({ where: { mobile } });
 
+    
     return ctx.send({
         message: "OTP verified successfully!",
         user,
