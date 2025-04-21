@@ -134,3 +134,7 @@ build
 
 # Ignore package-lock.json
 package-lock.json
+
+
+# Ignore Firebase service account key
+src/utils/firebase/serviceAccountkey.json
