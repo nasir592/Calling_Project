@@ -2,7 +2,7 @@
 
 const { createCoreController } = require("@strapi/strapi").factories;
 const Agora = require("agora-access-token");
-const axios = require("axios"); // For Firebase notifications
+const axios = require("axios"); // For Firebase notificationsss
 const admin = require("../../../utils/firebase/firebase-admin");
 
 module.exports = createCoreController("api::call.call", ({ strapi }) => ({
@@ -14,7 +14,7 @@ module.exports = createCoreController("api::call.call", ({ strapi }) => ({
       const settings = await strapi.entityService.findMany(
         "api::app-config.app-config",
         1
-      );
+      )
 
       if (
         !settings ||
